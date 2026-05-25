@@ -55,7 +55,7 @@ export function ProjectWizard({
     },
     {
       number: 3,
-      title: 'Importar keywords',
+      title: 'Crear o importar keywords',
       completed: project.totalKeywords > 0,
     },
     {
@@ -64,7 +64,7 @@ export function ProjectWizard({
       completed: hasTokens,
       manual: true,
       instructions: `1. Ve a console.cloud.google.com
-2. Crea un nuevo proyecto (ej: InvisionMX)
+2. Crea un nuevo proyecto (ej: MiProyectoSEO)
 3. En el buscador, busca "Web Search Indexing API" y activala
 4. Ve a "IAM y administracion" → "Cuentas de servicio"
 5. Crea una nueva cuenta de servicio

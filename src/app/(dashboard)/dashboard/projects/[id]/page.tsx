@@ -1401,7 +1401,7 @@ export default function ProjectDetailPage() {
                 <Key className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
                   {kwStats.total === 0
-                    ? 'No hay keywords en este proyecto. Importa keywords desde un archivo TXT o CSV.'
+                    ? 'No hay keywords en este proyecto. Créalas con el Generador de Keywords o importa una lista (TXT/CSV).'
                     : 'No se encontraron keywords con ese filtro.'}
                 </p>
               </CardContent>
@@ -2444,7 +2444,7 @@ export default function ProjectDetailPage() {
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
                   Las regiones heredan el dominio, datos del negocio, tokens y template SEO de este proyecto.
-                  Solo necesitas importar las keywords de cada region.
+                  Solo necesitas crear o importar las keywords de cada región.
                 </p>
               </CardContent>
             </Card>
