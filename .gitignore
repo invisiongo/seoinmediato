@@ -53,11 +53,12 @@ Thumbs.db
 .AppleDouble
 .LSOverride
 
-# Claude Code
-.claude/skills/**/node_modules
-.claude/plugins
-*.mcp.json
-!example.mcp.json
+# AI / SaaS Factory config — local only, no se distribuye en el repo
+.claude/
+CLAUDE.md
+.gemini/
+GEMINI.md
+.mcp.json
 
 # Supabase
 supabase/.branches
