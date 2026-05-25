@@ -179,7 +179,7 @@ En cada propiedad, en Sitemaps:
 
 **REGLA DE ORO:** NO activar tokens hasta que GSC confirme que los service accounts son Owners. Si no, cada push gasta cuota sin indexar.
 
-**Tras activar:** monitorear `seoinmediato.com/dashboard/indexing` cada hora durante el primer día. Si ves 403s, los Owners no están bien. Pausar tokens y esperar.
+**Tras activar:** monitorear `app.seoinmediato.com/dashboard/indexing` cada hora durante el primer día. Si ves 403s, los Owners no están bien. Pausar tokens y esperar.
 
 ---
 

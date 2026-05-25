@@ -14,7 +14,7 @@
 Configurar en Dokploy → Application → Environment:
 
 ```
-NEXT_PUBLIC_APP_URL=https://seoinmediato.com
+NEXT_PUBLIC_APP_URL=https://app.seoinmediato.com
 NEXT_PUBLIC_APPWRITE_ENDPOINT=https://db.invisiongo.com/v1
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=6a144cb200033adb6dbb
 NEXT_PUBLIC_APPWRITE_PROJECT_NAME=SEOImediato
@@ -25,7 +25,7 @@ CRON_SECRET=genera_un_secreto_aleatorio_seguro
 
 ### 3. Dominio y red
 
-1. Dominio: `seoinmediato.com`
+1. Dominio: `app.seoinmediato.com`
 2. HTTPS: Activar (Let's Encrypt automatico con Dokploy)
 3. Network: `dokploy-network`
 4. Puerto: 3000
@@ -34,7 +34,7 @@ CRON_SECRET=genera_un_secreto_aleatorio_seguro
 
 En la consola de Appwrite:
 1. Ir al proyecto → Settings → Platforms
-2. Agregar plataforma Web: `seoinmediato.com`
+2. Agregar plataforma Web: `app.seoinmediato.com`
 3. Esto permite que el SDK de Appwrite funcione desde el dominio de produccion
 
 ### 5. Deploy
