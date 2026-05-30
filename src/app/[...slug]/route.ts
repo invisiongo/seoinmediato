@@ -336,8 +336,7 @@ async function handleSeoPage(
   })
 
   const logoUrl = String(landingDoc?.logoUrl || '')
-  const faviconPath = '/favicon-invision-64.png'
-  const faviconTag = `<link rel="icon" href="${faviconPath}" type="image/png" sizes="64x64">`
+  const faviconTag = logoUrl ? `<link rel="icon" href="${logoUrl}" type="image/png">` : ''
   const ogImageTag = logoUrl ? `<meta property="og:image" content="${escapeHtml(logoUrl)}">` : ''
 
   const html = `<!DOCTYPE html>

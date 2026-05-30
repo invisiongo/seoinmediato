@@ -107,7 +107,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(metaDesc)}">
 <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
-<link rel="icon" href="/favicon-invision-64.png" type="image/png" sizes="64x64">
+${logoUrl ? `<link rel="icon" href="${escapeHtml(logoUrl)}" type="image/png">` : ''}
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(metaDesc)}">
 <meta property="og:url" content="${escapeHtml(canonicalUrl)}">

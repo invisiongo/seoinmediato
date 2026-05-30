@@ -251,7 +251,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       : neuroHtml
 
     const logoUrl = String(landingDoc?.logoUrl || '')
-    const faviconTag = `<link rel="icon" href="/favicon-invision.png" type="image/png">`
+    const faviconTag = logoUrl ? `<link rel="icon" href="${escapeHtml(logoUrl)}" type="image/png">` : ''
     const ogImageTag = logoUrl ? `<meta property="og:image" content="${escapeHtml(logoUrl)}">` : ''
 
     const html = `<!DOCTYPE html>

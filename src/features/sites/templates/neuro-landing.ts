@@ -124,29 +124,30 @@ export function generateNeuroLanding(params: LandingParams): string {
   // Default stats if none configured
   if (stats.length === 0) {
     stats = [
-      { value: 'Desde 2013', label: 'Más de una década creando software' },
-      { value: 'Tiempo récord', label: 'Entregamos rápido sin sacrificar calidad' },
       { value: '100%', label: 'Garantía de satisfacción' },
+      { value: '24/7', label: 'Atención disponible' },
+      { value: '★★★★★', label: 'Calificación de clientes' },
     ]
   }
 
   // Default testimonials if none configured
   if (testimonials.length === 0) {
     testimonials = [
-      { name: 'Ing. Roberto Salazar', text: 'El equipo superó nuestras expectativas. La implementación fue rápida y profesional. Resultados visibles desde el primer mes.', rating: 5, role: 'Director General' },
-      { name: 'Lcda. Patricia Mendoza', text: 'Excelente servicio y atención personalizada. Nos ayudaron a transformar nuestros procesos por completo.', rating: 5, role: 'Directora de Operaciones' },
-      { name: 'Ing. Carlos Vásquez', text: 'Profesionales de primer nivel. La solución que nos entregaron cambió la forma en que trabajamos.', rating: 5, role: 'Gerente de Tecnología' },
-      { name: 'Dra. Gabriela Torres', text: 'Recomiendo sus servicios sin dudarlo. Cumplieron con todo lo prometido y más.', rating: 5, role: 'Directora Comercial' },
+      { name: 'Roberto M.', text: `${businessName} superó nuestras expectativas. Resultados visibles desde el primer mes.`, rating: 5, role: 'Cliente verificado' },
+      { name: 'Patricia L.', text: 'Excelente servicio y atención personalizada. Totalmente recomendados.', rating: 5, role: 'Cliente verificado' },
+      { name: 'Carlos V.', text: 'Profesionales de primer nivel. Cumplieron con todo lo prometido y más.', rating: 5, role: 'Cliente verificado' },
+      { name: 'Gabriela T.', text: 'La mejor decisión que tomamos. El equipo es muy comprometido con los resultados.', rating: 5, role: 'Cliente verificado' },
     ]
   }
 
-  // Default services if none configured
+  // Default services if none configured — use niche-based generics
   if (services.length === 0) {
+    const nicheLabel = niche || keyword || 'nuestros servicios'
     services = [
-      { name: 'Desarrollo de Software a Medida', description: 'Plataformas web, SaaS, sistemas empresariales, APIs y microservicios diseñados para tu operación.' },
-      { name: 'Automatización con IA', description: 'Agentes inteligentes, sistemas RAG, automatización de procesos y flujos de trabajo empresariales.' },
-      { name: 'E-commerce y Plataformas Digitales', description: 'Tiendas online, marketplaces y plataformas de venta con integración completa de pagos.' },
-      { name: 'Integración de Sistemas', description: 'Conexión WhatsApp Business, CRM, ERP y APIs externas para unificar tu ecosistema digital.' },
+      { name: `${nicheLabel} profesional`, description: 'Servicio de alta calidad adaptado a tus necesidades específicas y objetivos de negocio.' },
+      { name: 'Atención personalizada', description: 'Un equipo dedicado que entiende tu situación y trabaja para obtener los mejores resultados.' },
+      { name: 'Resultados garantizados', description: 'Estrategias probadas y metodologías efectivas que generan resultados medibles y sostenibles.' },
+      { name: 'Soporte continuo', description: 'Acompañamiento constante antes, durante y después del servicio para asegurar tu satisfacción.' },
     ]
   }
 
@@ -313,8 +314,8 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   <!-- CTA FINAL -->
   <section id="contacto" style="max-width:800px;margin:0 auto;padding:60px 20px">
     <div style="background:linear-gradient(135deg,rgba(255,10,120,0.1),rgba(110,0,255,0.1));border:1px solid rgba(255,10,120,0.3);border-radius:24px;padding:48px 32px;text-align:center">
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:#fff;margin:0 0 12px">¡No sigas posponiendo tu proyecto!</h2>
-      <p style="font-size:16px;color:#8e90b3;margin:0 0 32px;max-width:500px;display:inline-block">Empieza hoy. Si llegaste hasta aquí es momento de tomar la mejor decisión.</p>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:#fff;margin:0 0 12px">¿Listo para empezar?</h2>
+      <p style="font-size:16px;color:#8e90b3;margin:0 0 32px;max-width:500px;display:inline-block">Contáctanos hoy. Nuestro equipo está listo para atenderte y darte la mejor solución.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px">
         ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none;animation:pulse-green 2s infinite">${iconWhatsApp} Hablar por WhatsApp</a>` : ''}
         <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:rgba(110,0,255,0.3);border:1px solid #6e00ff;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none">${iconArrow} Ver nuestros servicios</a>
@@ -335,7 +336,7 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
     <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px">
       <div>
         ${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="${eb}" style="height:28px;margin-bottom:12px" loading="lazy">` : `<p style="font-size:18px;font-weight:700;color:#fff;margin:0 0 12px">${eb}</p>`}
-        <p style="font-size:13px;color:#8e90b3;line-height:1.6;margin:0">Desde 2013 desarrollando software empresarial. Entrega en tiempo récord con garantía de satisfacción. Clientes en México, Estados Unidos, Canadá, Europa y Sudamérica.</p>
+        <p style="font-size:13px;color:#8e90b3;line-height:1.6;margin:0">${escapeHtml(niche || businessName)} — Servicio profesional con garantía de satisfacción para cada cliente.</p>
       </div>
       <div>
         <h4 style="font-size:14px;font-weight:700;color:#fff;margin:0 0 12px">Contacto</h4>
