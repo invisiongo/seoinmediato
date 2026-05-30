@@ -3,29 +3,20 @@ import { getAccount } from '@/shared/lib/appwrite-client'
 import type { AuthUser } from '../types'
 
 export async function login(email: string, password: string): Promise<void> {
-  // Use server proxy to avoid Appwrite client-side rate limits
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  })
-  const session = await res.json()
-  if (!res.ok) {
-    const error = new Error(session.message || 'Error al iniciar sesion') as Error & { type?: string; code?: number }
-    error.type = session.type
-    error.code = res.status
+  const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID
+
+  try {
+    // Use Appwrite SDK directly — it handles cookieFallback/localStorage automatically
+    await getAccount().createEmailPasswordSession(email, password)
+  } catch (err: unknown) {
+    const e = err as { type?: string; message?: string; code?: number }
+    const error = new Error(e.message || 'Error al iniciar sesion') as Error & { type?: string; code?: number }
+    error.type = e.type
+    error.code = e.code
     throw error
   }
 
-  const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID
-
-  // Store session in localStorage so the Appwrite SDK picks it up
-  // via the X-Fallback-Cookies mechanism (see SDK source prepareRequest)
-  const fallback = JSON.parse(window.localStorage.getItem('cookieFallback') || '{}')
-  fallback[`a_session_${projectId}`] = session.secret
-  window.localStorage.setItem('cookieFallback', JSON.stringify(fallback))
-
-  // Also set a simple cookie so Next.js middleware can detect the session
+  // Set a simple cookie so Next.js middleware can detect the session
   document.cookie = `a_session_${projectId}=true; path=/; max-age=31536000; SameSite=Lax`
 }
 
