@@ -2338,10 +2338,14 @@ export default function ProjectDetailPage() {
                       onChange={(e) => updateLandingField('colorScheme', e.target.value)}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     >
-                      <option value="dark">Oscuro</option>
-                      <option value="light">Claro</option>
-                      <option value="blue">Azul</option>
-                      <option value="green">Verde</option>
+                      <option value="dark">🌑 Dark Pro (morado)</option>
+                      <option value="midnight-gold">✨ Midnight Gold (lujo)</option>
+                      <option value="blue">🌊 Ocean Blue (corporativo)</option>
+                      <option value="green">🌿 Emerald (salud/natura)</option>
+                      <option value="light">☀️ Pure White (minimalista)</option>
+                      <option value="crimson">🔥 Crimson (energía/urgencia)</option>
+                      <option value="orange">🌅 Sunset Orange (creativo)</option>
+                      <option value="purple">💜 Royal Purple (belleza/moda)</option>
                     </select>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">

@@ -67,11 +67,126 @@ function hashToRange(str: string, min: number, max: number): number {
   return min + (Math.abs(hash) % (max - min + 1))
 }
 
+interface Theme {
+  bg: string          // page background
+  bgCard: string      // card/panel background
+  bgCardHover: string
+  border: string      // card borders
+  borderAccent: string
+  navBg: string
+  text: string        // body text
+  textMuted: string   // secondary text
+  textHead: string    // headings
+  accent: string      // primary accent color (hex)
+  accent2: string     // secondary accent (hex)
+  accentGrad: string  // CSS gradient for accents
+  accentGradText: string // gradient for text
+  btnPrimary: string  // primary button background
+  btnSecondary: string
+  badge: string       // pill/badge background
+  badgeText: string
+  starColor: string
+  footerBg: string
+}
+
+const THEMES: Record<string, Theme> = {
+  // 1. Dark Pro — midnight purple (default)
+  'dark': {
+    bg: '#060129', bgCard: 'rgba(15,13,40,0.6)', bgCardHover: 'rgba(110,0,255,0.15)',
+    border: '#312c52', borderAccent: '#6e00ff', navBg: 'rgba(6,1,41,0.92)',
+    text: '#c8c9e3', textMuted: '#8e90b3', textHead: '#ffffff',
+    accent: '#ff0a78', accent2: '#6e00ff', accentGrad: 'linear-gradient(135deg,#ff0a78,#6e00ff)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#c8c9e3 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(110,0,255,0.25)',
+    badge: 'rgba(255,10,120,0.12)', badgeText: '#ff0a78',
+    starColor: '#ff0a78', footerBg: 'rgba(6,1,41,0.95)',
+  },
+  // 2. Midnight Gold — luxury/premium
+  'midnight-gold': {
+    bg: '#0a0800', bgCard: 'rgba(30,24,4,0.7)', bgCardHover: 'rgba(212,175,55,0.12)',
+    border: '#2e2608', borderAccent: '#d4af37', navBg: 'rgba(10,8,0,0.95)',
+    text: '#d4c89a', textMuted: '#8a7e5a', textHead: '#ffffff',
+    accent: '#d4af37', accent2: '#f5d76e', accentGrad: 'linear-gradient(135deg,#d4af37,#f5d76e)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#d4c89a 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(212,175,55,0.2)',
+    badge: 'rgba(212,175,55,0.12)', badgeText: '#d4af37',
+    starColor: '#d4af37', footerBg: 'rgba(10,8,0,0.98)',
+  },
+  // 3. Ocean Blue — corporate/B2B
+  'blue': {
+    bg: '#050d1a', bgCard: 'rgba(10,24,50,0.65)', bgCardHover: 'rgba(0,112,243,0.15)',
+    border: '#0d2040', borderAccent: '#0070f3', navBg: 'rgba(5,13,26,0.95)',
+    text: '#b8c8e8', textMuted: '#6b82a8', textHead: '#ffffff',
+    accent: '#0070f3', accent2: '#00d4ff', accentGrad: 'linear-gradient(135deg,#0070f3,#00d4ff)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#b8c8e8 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(0,112,243,0.25)',
+    badge: 'rgba(0,112,243,0.12)', badgeText: '#00d4ff',
+    starColor: '#0070f3', footerBg: 'rgba(5,13,26,0.98)',
+  },
+  // 4. Emerald — health/wellness/nature
+  'green': {
+    bg: '#030f07', bgCard: 'rgba(6,26,12,0.65)', bgCardHover: 'rgba(16,185,129,0.12)',
+    border: '#0a2a14', borderAccent: '#10b981', navBg: 'rgba(3,15,7,0.95)',
+    text: '#a7f3d0', textMuted: '#5a9e7a', textHead: '#ffffff',
+    accent: '#10b981', accent2: '#34d399', accentGrad: 'linear-gradient(135deg,#10b981,#34d399)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#a7f3d0 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(16,185,129,0.2)',
+    badge: 'rgba(16,185,129,0.12)', badgeText: '#34d399',
+    starColor: '#10b981', footerBg: 'rgba(3,15,7,0.98)',
+  },
+  // 5. Pure White — minimal/clean/modern
+  'light': {
+    bg: '#f8fafc', bgCard: '#ffffff', bgCardHover: 'rgba(99,102,241,0.06)',
+    border: '#e2e8f0', borderAccent: '#6366f1', navBg: 'rgba(255,255,255,0.95)',
+    text: '#374151', textMuted: '#6b7280', textHead: '#111827',
+    accent: '#6366f1', accent2: '#8b5cf6', accentGrad: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+    accentGradText: 'linear-gradient(135deg,#111827 0%,#374151 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(99,102,241,0.12)',
+    badge: 'rgba(99,102,241,0.08)', badgeText: '#6366f1',
+    starColor: '#f59e0b', footerBg: '#1e293b',
+  },
+  // 6. Crimson — energy/urgency/fitness
+  'crimson': {
+    bg: '#0d0004', bgCard: 'rgba(30,2,8,0.65)', bgCardHover: 'rgba(220,38,38,0.15)',
+    border: '#2a0008', borderAccent: '#dc2626', navBg: 'rgba(13,0,4,0.95)',
+    text: '#fca5a5', textMuted: '#9f5858', textHead: '#ffffff',
+    accent: '#dc2626', accent2: '#ef4444', accentGrad: 'linear-gradient(135deg,#dc2626,#ef4444)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#fca5a5 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(220,38,38,0.22)',
+    badge: 'rgba(220,38,38,0.12)', badgeText: '#ef4444',
+    starColor: '#ef4444', footerBg: 'rgba(13,0,4,0.98)',
+  },
+  // 7. Sunset Orange — creative/real estate/food
+  'orange': {
+    bg: '#0c0600', bgCard: 'rgba(28,14,2,0.65)', bgCardHover: 'rgba(249,115,22,0.14)',
+    border: '#2a1400', borderAccent: '#f97316', navBg: 'rgba(12,6,0,0.95)',
+    text: '#fed7aa', textMuted: '#9a6a40', textHead: '#ffffff',
+    accent: '#f97316', accent2: '#fb923c', accentGrad: 'linear-gradient(135deg,#f97316,#fbbf24)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#fed7aa 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(249,115,22,0.2)',
+    badge: 'rgba(249,115,22,0.12)', badgeText: '#fb923c',
+    starColor: '#f97316', footerBg: 'rgba(12,6,0,0.98)',
+  },
+  // 8. Royal Purple — beauty/fashion/coaching
+  'purple': {
+    bg: '#080010', bgCard: 'rgba(20,4,40,0.65)', bgCardHover: 'rgba(168,85,247,0.14)',
+    border: '#1e0840', borderAccent: '#a855f7', navBg: 'rgba(8,0,16,0.95)',
+    text: '#e9d5ff', textMuted: '#8b5abf', textHead: '#ffffff',
+    accent: '#a855f7', accent2: '#c084fc', accentGrad: 'linear-gradient(135deg,#a855f7,#ec4899)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#e9d5ff 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(168,85,247,0.2)',
+    badge: 'rgba(168,85,247,0.1)', badgeText: '#c084fc',
+    starColor: '#a855f7', footerBg: 'rgba(8,0,16,0.98)',
+  },
+}
+
 export function generateNeuroLanding(params: LandingParams): string {
   const {
     keyword, businessName, businessPhone, businessEmail,
     niche, location,
   } = params
+
+  const t: Theme = THEMES[params.landingData?.colorScheme || 'dark'] ?? THEMES['dark']
 
   const phone = businessPhone.replace(/[^0-9]/g, '')
   const waLink = phone
@@ -170,20 +285,20 @@ export function generateNeuroLanding(params: LandingParams): string {
   const iconCheck = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
   const iconArrow = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
 
-  return `<body style="margin:0;background:#060129;color:#c8c9e3;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden">
+  return `<body style="margin:0;background:${t.bg};color:${t.text};font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden">
 
-<!-- Social Proof Popup (B2B adapted) -->
-<div id="social-proof" style="position:fixed;bottom:20px;left:20px;background:rgba(15,1,40,0.95);border:1px solid #312c52;border-radius:12px;padding:12px 16px;max-width:340px;z-index:1000;opacity:0;transform:translateY(20px);transition:all .4s ease;box-shadow:0 8px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px)">
-  <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ff0a78,#6e00ff);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+<!-- Social Proof Popup -->
+<div id="social-proof" style="position:fixed;bottom:20px;left:20px;background:${t.navBg};border:1px solid ${t.border};border-radius:12px;padding:12px 16px;max-width:340px;z-index:1000;opacity:0;transform:translateY(20px);transition:all .4s ease;box-shadow:0 8px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px)">
+  <div style="width:36px;height:36px;border-radius:50%;background:${t.accentGrad};display:flex;align-items:center;justify-content:center;flex-shrink:0">
     ${iconCheck}
   </div>
   <div>
-    <p id="sp-text" style="margin:0;font-size:13px;color:#c8c9e3;line-height:1.4"></p>
-    <p id="sp-time" style="margin:2px 0 0;font-size:11px;color:#8e90b3"></p>
+    <p id="sp-text" style="margin:0;font-size:13px;color:${t.text};line-height:1.4"></p>
+    <p id="sp-time" style="margin:2px 0 0;font-size:11px;color:${t.textMuted}"></p>
   </div>
 </div>
 
-<!-- Floating WhatsApp Button -->
+<!-- Floating WhatsApp -->
 ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" style="position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;z-index:1001;box-shadow:0 4px 20px rgba(37,211,102,.4);text-decoration:none;animation:pulse-green 2s infinite">
   <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
 </a>` : ''}
@@ -191,48 +306,45 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
 <main>
 
   <!-- NAVBAR -->
-  <nav style="position:sticky;top:0;z-index:100;background:rgba(6,1,41,0.9);backdrop-filter:blur(12px);border-bottom:1px solid #312c52;padding:12px 0">
+  <nav style="position:sticky;top:0;z-index:100;background:${t.navBg};backdrop-filter:blur(12px);border-bottom:1px solid ${t.border};padding:12px 0">
     <div style="max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:10px">
-        ${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="${eb}" style="height:32px;width:auto" loading="lazy">` : `<span style="font-size:18px;font-weight:700;color:#fff">${eb}</span>`}
+        ${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="${eb}" style="height:32px;width:auto" loading="lazy">` : `<span style="font-size:18px;font-weight:700;color:${t.textHead}">${eb}</span>`}
       </div>
       <div style="display:flex;gap:20px;align-items:center;font-size:14px">
-        <a href="#inicio" style="color:#c8c9e3;text-decoration:none">Inicio</a>
-        <a href="#servicios" style="color:#c8c9e3;text-decoration:none">Servicios</a>
-        <a href="#proceso" style="color:#c8c9e3;text-decoration:none">Proceso</a>
-        <a href="#testimonios" style="color:#c8c9e3;text-decoration:none">Clientes</a>
-        <a href="#contacto" style="color:#c8c9e3;text-decoration:none">Contacto</a>
-        ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#ff0a78,#6e00ff);color:#fff;padding:8px 20px;border-radius:50px;text-decoration:none;font-weight:600;font-size:13px">Cotización</a>` : ''}
+        <a href="#inicio" style="color:${t.text};text-decoration:none">Inicio</a>
+        <a href="#servicios" style="color:${t.text};text-decoration:none">Servicios</a>
+        <a href="#proceso" style="color:${t.text};text-decoration:none">Proceso</a>
+        <a href="#testimonios" style="color:${t.text};text-decoration:none">Clientes</a>
+        <a href="#contacto" style="color:${t.text};text-decoration:none">Contacto</a>
+        ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="background:${t.accentGrad};color:#fff;padding:8px 20px;border-radius:50px;text-decoration:none;font-weight:600;font-size:13px">Cotización</a>` : ''}
       </div>
     </div>
   </nav>
 
   <!-- HERO -->
   <section id="inicio" style="max-width:1100px;margin:0 auto;padding:60px 20px 40px;text-align:center">
-    <div style="display:inline-block;background:rgba(255,10,120,0.1);border:1px solid rgba(255,10,120,0.3);border-radius:50px;padding:6px 20px;margin-bottom:24px">
-      <span style="font-size:13px;color:#ff0a78;font-weight:600">${en}${eLoc ? ` · ${eLoc}` : ''}</span>
+    <div style="display:inline-block;background:${t.badge};border:1px solid ${t.borderAccent};border-radius:50px;padding:6px 20px;margin-bottom:24px">
+      <span style="font-size:13px;color:${t.badgeText};font-weight:600">${en}${eLoc ? ` · ${eLoc}` : ''}</span>
     </div>
-    <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:800;line-height:1.15;margin:0 0 12px;background:linear-gradient(135deg,#fff 0%,#c8c9e3 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${ek}</h1>
-    <p style="font-size:20px;color:#ff0a78;font-weight:600;margin:0 0 16px">${escapeHtml(serviceContent.heroSubtitle)}</p>
-    <p style="font-size:16px;color:#8e90b3;max-width:640px;margin:0 auto 32px;line-height:1.7">${escapeHtml(serviceContent.description)}</p>
+    <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:800;line-height:1.15;margin:0 0 12px;background:${t.accentGradText};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${ek}</h1>
+    <p style="font-size:20px;color:${t.accent};font-weight:600;margin:0 0 16px">${escapeHtml(serviceContent.heroSubtitle)}</p>
+    <p style="font-size:16px;color:${t.textMuted};max-width:640px;margin:0 auto 32px;line-height:1.7">${escapeHtml(serviceContent.description)}</p>
 
-    <!-- Hero CTAs -->
     <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:32px">
       ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none;animation:pulse-green 2s infinite">${iconWhatsApp} ${escapeHtml(ctaWaText)}</a>` : ''}
-      <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:rgba(110,0,255,0.2);border:1px solid #6e00ff;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none">${iconArrow} Ver nuestros servicios</a>
+      <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:${t.btnSecondary};border:1px solid ${t.borderAccent};color:${t.textHead};font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none">${iconArrow} Ver nuestros servicios</a>
     </div>
 
-    <!-- Live Viewer Counter -->
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,10,120,0.08);border:1px solid rgba(255,10,120,0.2);border-radius:50px;padding:8px 18px">
-      <span style="width:8px;height:8px;border-radius:50%;background:#ff0a78;animation:blink 1.5s infinite"></span>
-      <span id="viewer-count" style="font-size:14px;color:#c8c9e3">🔥 <strong>${viewerCount} personas</strong> están mirando esta oferta ahora</span>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:${t.badge};border:1px solid ${t.borderAccent};border-radius:50px;padding:8px 18px">
+      <span style="width:8px;height:8px;border-radius:50%;background:${t.accent};animation:blink 1.5s infinite"></span>
+      <span id="viewer-count" style="font-size:14px;color:${t.text}">🔥 <strong>${viewerCount} personas</strong> están mirando esta oferta ahora</span>
     </div>
 
-    <!-- Stats Row -->
     <div style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
       ${stats.map(s => `<div style="text-align:center">
-        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#ff0a78,#6e00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${escapeHtml(s.value)}</div>
-        <div style="font-size:13px;color:#8e90b3;margin-top:4px">${escapeHtml(s.label)}</div>
+        <div style="font-size:2rem;font-weight:800;background:${t.accentGrad};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${escapeHtml(s.value)}</div>
+        <div style="font-size:13px;color:${t.textMuted};margin-top:4px">${escapeHtml(s.label)}</div>
       </div>`).join('\n      ')}
     </div>
   </section>
@@ -240,14 +352,14 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   <!-- SERVICES -->
   <section id="servicios" style="max-width:1100px;margin:0 auto;padding:60px 20px">
     <div style="text-align:center;margin-bottom:40px">
-      <span style="font-size:13px;color:#ff0a78;font-weight:600;text-transform:uppercase;letter-spacing:2px">Soluciones profesionales</span>
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#fff;margin:12px 0 0">Lo que hacemos por ti</h2>
+      <span style="font-size:13px;color:${t.accent};font-weight:600;text-transform:uppercase;letter-spacing:2px">Soluciones profesionales</span>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:12px 0 0">Lo que hacemos por ti</h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
-      ${services.map((s, i) => `<div style="background:rgba(15,13,40,0.6);border:1px solid #312c52;border-radius:16px;padding:28px;transition:border-color .3s,box-shadow .3s" onmouseover="this.style.borderColor='#6e00ff';this.style.boxShadow='0 0 20px rgba(110,0,255,0.15)'" onmouseout="this.style.borderColor='#312c52';this.style.boxShadow='none'">
-        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#ff0a78,#6e00ff);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;color:#fff">${['💡', '⚡', '🛡️', '🎯', '🚀', '📊', '🔧', '🤝'][i % 8]}</div>
-        <h3 style="font-size:16px;font-weight:700;color:#fff;margin:0 0 8px">${escapeHtml(s.name)}</h3>
-        <p style="font-size:14px;color:#8e90b3;margin:0;line-height:1.6">${escapeHtml(s.description)}</p>
+      ${services.map((s, i) => `<div style="background:${t.bgCard};border:1px solid ${t.border};border-radius:16px;padding:28px;transition:border-color .3s,box-shadow .3s" onmouseover="this.style.borderColor='${t.borderAccent}';this.style.boxShadow='0 0 24px ${t.bgCardHover}'" onmouseout="this.style.borderColor='${t.border}';this.style.boxShadow='none'">
+        <div style="width:44px;height:44px;border-radius:12px;background:${t.accentGrad};display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px">${['💡', '⚡', '🛡️', '🎯', '🚀', '📊', '🔧', '🤝'][i % 8]}</div>
+        <h3 style="font-size:16px;font-weight:700;color:${t.textHead};margin:0 0 8px">${escapeHtml(s.name)}</h3>
+        <p style="font-size:14px;color:${t.textMuted};margin:0;line-height:1.6">${escapeHtml(s.description)}</p>
       </div>`).join('\n      ')}
     </div>
   </section>
@@ -255,9 +367,9 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   <!-- PROCESS -->
   <section id="proceso" style="max-width:1100px;margin:0 auto;padding:60px 20px">
     <div style="text-align:center;margin-bottom:40px">
-      <span style="font-size:13px;color:#ff0a78;font-weight:600;text-transform:uppercase;letter-spacing:2px">Nuestro proceso</span>
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#fff;margin:12px 0 0">Cómo trabajamos contigo</h2>
-      <p style="font-size:16px;color:#8e90b3;max-width:600px;margin:12px auto 0">Un proceso diseñado para entregar resultados excepcionales de principio a fin.</p>
+      <span style="font-size:13px;color:${t.accent};font-weight:600;text-transform:uppercase;letter-spacing:2px">Nuestro proceso</span>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:12px 0 0">Cómo trabajamos contigo</h2>
+      <p style="font-size:16px;color:${t.textMuted};max-width:600px;margin:12px auto 0">Un proceso claro, transparente y orientado a resultados.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
       ${[
@@ -265,10 +377,10 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
         { step: '02', title: 'Estrategia', desc: 'Diseñamos un plan de acción personalizado con plazos y entregables claros.' },
         { step: '03', title: 'Ejecución', desc: 'Implementamos la solución con los más altos estándares de calidad.' },
         { step: '04', title: 'Resultados', desc: 'Medimos, optimizamos y aseguramos que los resultados superen expectativas.' },
-      ].map(p => `<div style="background:rgba(15,13,40,0.6);border:1px solid #312c52;border-radius:16px;padding:28px;text-align:center">
-        <div style="font-size:2rem;font-weight:800;background:linear-gradient(135deg,#ff0a78,#6e00ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px">${p.step}</div>
-        <h3 style="font-size:16px;font-weight:700;color:#fff;margin:0 0 8px">${p.title}</h3>
-        <p style="font-size:14px;color:#8e90b3;margin:0;line-height:1.6">${p.desc}</p>
+      ].map(p => `<div style="background:${t.bgCard};border:1px solid ${t.border};border-radius:16px;padding:28px;text-align:center">
+        <div style="font-size:2rem;font-weight:800;background:${t.accentGrad};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px">${p.step}</div>
+        <h3 style="font-size:16px;font-weight:700;color:${t.textHead};margin:0 0 8px">${p.title}</h3>
+        <p style="font-size:14px;color:${t.textMuted};margin:0;line-height:1.6">${p.desc}</p>
       </div>`).join('\n      ')}
     </div>
   </section>
@@ -276,15 +388,15 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   <!-- WHY US -->
   <section style="max-width:1100px;margin:0 auto;padding:60px 20px">
     <div style="text-align:center;margin-bottom:40px">
-      <span style="font-size:13px;color:#ff0a78;font-weight:600;text-transform:uppercase;letter-spacing:2px">¿Por qué elegirnos?</span>
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#fff;margin:12px 0 0">Lo que nos hace diferentes</h2>
+      <span style="font-size:13px;color:${t.accent};font-weight:600;text-transform:uppercase;letter-spacing:2px">¿Por qué elegirnos?</span>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:12px 0 0">Lo que nos hace diferentes</h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-      ${serviceContent.benefits.map((b, i) => `<div style="display:flex;gap:16px;align-items:flex-start;background:rgba(15,13,40,0.4);border:1px solid #312c52;border-radius:16px;padding:24px">
+      ${serviceContent.benefits.map((b, i) => `<div style="display:flex;gap:16px;align-items:flex-start;background:${t.bgCard};border:1px solid ${t.border};border-radius:16px;padding:24px">
         <div style="font-size:28px;flex-shrink:0">${['🏆', '⚡', '🎯', '🤝'][i % 4]}</div>
         <div>
-          <h3 style="font-size:15px;font-weight:700;color:#fff;margin:0 0 6px">${escapeHtml(b.title)}</h3>
-          <p style="font-size:14px;color:#8e90b3;margin:0;line-height:1.5">${escapeHtml(b.desc)}</p>
+          <h3 style="font-size:15px;font-weight:700;color:${t.textHead};margin:0 0 6px">${escapeHtml(b.title)}</h3>
+          <p style="font-size:14px;color:${t.textMuted};margin:0;line-height:1.5">${escapeHtml(b.desc)}</p>
         </div>
       </div>`).join('\n      ')}
     </div>
@@ -293,18 +405,18 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   <!-- TESTIMONIALS -->
   <section id="testimonios" style="max-width:1100px;margin:0 auto;padding:60px 20px">
     <div style="text-align:center;margin-bottom:40px">
-      <span style="font-size:13px;color:#ff0a78;font-weight:600;text-transform:uppercase;letter-spacing:2px">Testimonios</span>
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:#fff;margin:12px 0 0">Lo que dicen nuestros clientes</h2>
+      <span style="font-size:13px;color:${t.accent};font-weight:600;text-transform:uppercase;letter-spacing:2px">Testimonios</span>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:12px 0 0">Lo que dicen nuestros clientes</h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-      ${testimonials.map(t => `<div style="background:rgba(15,13,40,0.6);border:1px solid #312c52;border-radius:16px;padding:24px">
-        <div style="margin-bottom:12px;color:#ff0a78">${'★'.repeat(Math.min(t.rating || 5, 5))}</div>
-        <p style="font-size:14px;color:#c8c9e3;margin:0 0 16px;line-height:1.7;font-style:italic">"${escapeHtml(t.text)}"</p>
+      ${testimonials.map(tm => `<div style="background:${t.bgCard};border:1px solid ${t.border};border-radius:16px;padding:24px">
+        <div style="margin-bottom:12px;color:${t.starColor}">${'★'.repeat(Math.min(tm.rating || 5, 5))}</div>
+        <p style="font-size:14px;color:${t.text};margin:0 0 16px;line-height:1.7;font-style:italic">"${escapeHtml(tm.text)}"</p>
         <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ff0a78,#6e00ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px">${t.name.charAt(0)}</div>
+          <div style="width:40px;height:40px;border-radius:50%;background:${t.accentGrad};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px">${tm.name.charAt(0)}</div>
           <div>
-            <p style="margin:0;font-size:14px;font-weight:600;color:#fff">${escapeHtml(t.name)}</p>
-            ${t.role ? `<p style="margin:2px 0 0;font-size:12px;color:#8e90b3">${escapeHtml(t.role)}</p>` : ''}
+            <p style="margin:0;font-size:14px;font-weight:600;color:${t.textHead}">${escapeHtml(tm.name)}</p>
+            ${tm.role ? `<p style="margin:2px 0 0;font-size:12px;color:${t.textMuted}">${escapeHtml(tm.role)}</p>` : ''}
           </div>
         </div>
       </div>`).join('\n      ')}
@@ -313,53 +425,53 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
 
   <!-- CTA FINAL -->
   <section id="contacto" style="max-width:800px;margin:0 auto;padding:60px 20px">
-    <div style="background:linear-gradient(135deg,rgba(255,10,120,0.1),rgba(110,0,255,0.1));border:1px solid rgba(255,10,120,0.3);border-radius:24px;padding:48px 32px;text-align:center">
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:#fff;margin:0 0 12px">¿Listo para empezar?</h2>
-      <p style="font-size:16px;color:#8e90b3;margin:0 0 32px;max-width:500px;display:inline-block">Contáctanos hoy. Nuestro equipo está listo para atenderte y darte la mejor solución.</p>
+    <div style="background:${t.btnSecondary};border:1px solid ${t.borderAccent};border-radius:24px;padding:48px 32px;text-align:center">
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:${t.textHead};margin:0 0 12px">¿Listo para empezar?</h2>
+      <p style="font-size:16px;color:${t.textMuted};margin:0 0 32px;max-width:500px;display:inline-block">Contáctanos hoy. Nuestro equipo está listo para atenderte y darte la mejor solución.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px">
         ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none;animation:pulse-green 2s infinite">${iconWhatsApp} Hablar por WhatsApp</a>` : ''}
-        <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:rgba(110,0,255,0.3);border:1px solid #6e00ff;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none">${iconArrow} Ver nuestros servicios</a>
+        <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:${t.btnSecondary};border:1px solid ${t.borderAccent};color:${t.textHead};font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none">${iconArrow} Ver nuestros servicios</a>
       </div>
-      ${eEmail ? `<p style="font-size:13px;color:#8e90b3">Email: <a href="mailto:${eEmail}" style="color:#ff0a78;text-decoration:none">${eEmail}</a></p>` : ''}
+      ${eEmail ? `<p style="font-size:13px;color:${t.textMuted}">Email: <a href="mailto:${eEmail}" style="color:${t.accent};text-decoration:none">${eEmail}</a></p>` : ''}
     </div>
   </section>
 
-  <!-- BACKLINK TO MAIN SITE -->
+  <!-- BACKLINK -->
   <section style="max-width:800px;margin:0 auto;padding:20px 20px 40px;text-align:center">
-    <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#8e90b3;text-decoration:none;font-size:14px;padding:12px 24px;border:1px solid #312c52;border-radius:50px;transition:border-color .3s" onmouseover="this.style.borderColor='#6e00ff'" onmouseout="this.style.borderColor='#312c52'">
+    <a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:${t.textMuted};text-decoration:none;font-size:14px;padding:12px 24px;border:1px solid ${t.border};border-radius:50px;transition:border-color .3s" onmouseover="this.style.borderColor='${t.borderAccent}'" onmouseout="this.style.borderColor='${t.border}'">
       Conoce todos nuestros servicios ${iconArrow}
     </a>
   </section>
 
   <!-- FOOTER -->
-  <footer style="border-top:1px solid #312c52;padding:40px 20px">
+  <footer style="background:${t.footerBg};border-top:1px solid ${t.border};padding:40px 20px">
     <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px">
       <div>
-        ${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="${eb}" style="height:28px;margin-bottom:12px" loading="lazy">` : `<p style="font-size:18px;font-weight:700;color:#fff;margin:0 0 12px">${eb}</p>`}
-        <p style="font-size:13px;color:#8e90b3;line-height:1.6;margin:0">${escapeHtml(niche || businessName)} — Servicio profesional con garantía de satisfacción para cada cliente.</p>
+        ${logoUrl ? `<img src="${escapeHtml(logoUrl)}" alt="${eb}" style="height:28px;margin-bottom:12px" loading="lazy">` : `<p style="font-size:18px;font-weight:700;color:${t.textHead};margin:0 0 12px">${eb}</p>`}
+        <p style="font-size:13px;color:${t.textMuted};line-height:1.6;margin:0">${escapeHtml(niche || businessName)} — Servicio profesional con garantía de satisfacción para cada cliente.</p>
       </div>
       <div>
-        <h4 style="font-size:14px;font-weight:700;color:#fff;margin:0 0 12px">Contacto</h4>
-        ${waLink ? `<p style="font-size:13px;color:#8e90b3;margin:0 0 8px"><a href="${waLink}" target="_blank" rel="noopener" style="color:#8e90b3;text-decoration:none">💬 WhatsApp Directo</a></p>` : ''}
-        ${eEmail ? `<p style="font-size:13px;color:#8e90b3;margin:0 0 8px"><a href="mailto:${eEmail}" style="color:#8e90b3;text-decoration:none">✉️ ${eEmail}</a></p>` : ''}
-        ${facebookUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(facebookUrl)}" target="_blank" rel="noopener nofollow" style="color:#8e90b3;text-decoration:none">📘 Facebook</a></p>` : ''}
-        ${instagramUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(instagramUrl)}" target="_blank" rel="noopener nofollow" style="color:#8e90b3;text-decoration:none">📸 Instagram</a></p>` : ''}
-        ${googleMapsUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener nofollow" style="color:#8e90b3;text-decoration:none">📍 Google Maps</a></p>` : ''}
+        <h4 style="font-size:14px;font-weight:700;color:${t.textHead};margin:0 0 12px">Contacto</h4>
+        ${waLink ? `<p style="font-size:13px;color:${t.textMuted};margin:0 0 8px"><a href="${waLink}" target="_blank" rel="noopener" style="color:${t.textMuted};text-decoration:none">💬 WhatsApp Directo</a></p>` : ''}
+        ${eEmail ? `<p style="font-size:13px;color:${t.textMuted};margin:0 0 8px"><a href="mailto:${eEmail}" style="color:${t.textMuted};text-decoration:none">✉️ ${eEmail}</a></p>` : ''}
+        ${facebookUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(facebookUrl)}" target="_blank" rel="noopener nofollow" style="color:${t.textMuted};text-decoration:none">📘 Facebook</a></p>` : ''}
+        ${instagramUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(instagramUrl)}" target="_blank" rel="noopener nofollow" style="color:${t.textMuted};text-decoration:none">📸 Instagram</a></p>` : ''}
+        ${googleMapsUrl ? `<p style="font-size:13px;margin:0 0 8px"><a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener nofollow" style="color:${t.textMuted};text-decoration:none">📍 Google Maps</a></p>` : ''}
       </div>
       <div>
-        <h4 style="font-size:14px;font-weight:700;color:#fff;margin:0 0 12px">Navegación</h4>
-        <p style="margin:0 0 6px"><a href="#inicio" style="font-size:13px;color:#8e90b3;text-decoration:none">Inicio</a></p>
-        <p style="margin:0 0 6px"><a href="#servicios" style="font-size:13px;color:#8e90b3;text-decoration:none">Servicios</a></p>
-        <p style="margin:0 0 6px"><a href="#proceso" style="font-size:13px;color:#8e90b3;text-decoration:none">Proceso</a></p>
-        <p style="margin:0 0 6px"><a href="#testimonios" style="font-size:13px;color:#8e90b3;text-decoration:none">Clientes</a></p>
-        <p style="margin:0"><a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="font-size:13px;color:#ff0a78;text-decoration:none">Ver todos los servicios →</a></p>
+        <h4 style="font-size:14px;font-weight:700;color:${t.textHead};margin:0 0 12px">Navegación</h4>
+        <p style="margin:0 0 6px"><a href="#inicio" style="font-size:13px;color:${t.textMuted};text-decoration:none">Inicio</a></p>
+        <p style="margin:0 0 6px"><a href="#servicios" style="font-size:13px;color:${t.textMuted};text-decoration:none">Servicios</a></p>
+        <p style="margin:0 0 6px"><a href="#proceso" style="font-size:13px;color:${t.textMuted};text-decoration:none">Proceso</a></p>
+        <p style="margin:0 0 6px"><a href="#testimonios" style="font-size:13px;color:${t.textMuted};text-decoration:none">Clientes</a></p>
+        <p style="margin:0"><a href="${escapeHtml(mainSiteUrl)}" target="_blank" rel="noopener" style="font-size:13px;color:${t.accent};text-decoration:none">Ver todos los servicios →</a></p>
       </div>
     </div>
-    <div style="max-width:1100px;margin:32px auto 0;padding-top:20px;border-top:1px solid #1a1833;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
-      <p style="margin:0;font-size:12px;color:#6b6a85">© 2026 ${eb}. Todos los derechos reservados.</p>
+    <div style="max-width:1100px;margin:32px auto 0;padding-top:20px;border-top:1px solid ${t.border};display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
+      <p style="margin:0;font-size:12px;color:${t.textMuted}">© 2026 ${eb}. Todos los derechos reservados.</p>
       <div style="display:flex;gap:16px">
-        <a href="#" style="font-size:12px;color:#6b6a85;text-decoration:none">Política de Privacidad</a>
-        <a href="#" style="font-size:12px;color:#6b6a85;text-decoration:none">Términos y Condiciones</a>
+        <a href="#" style="font-size:12px;color:${t.textMuted};text-decoration:none">Política de Privacidad</a>
+        <a href="#" style="font-size:12px;color:${t.textMuted};text-decoration:none">Términos y Condiciones</a>
       </div>
     </div>
   </footer>
