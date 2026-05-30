@@ -1144,7 +1144,7 @@ export default function ProjectDetailPage() {
                     <Input
                       value={newTokenName}
                       onChange={e => setNewTokenName(e.target.value)}
-                      placeholder="Ej: Token CDMX 1"
+                      placeholder="Ej: Token principal"
                     />
                   </div>
                   <div className="space-y-1">
