@@ -54,6 +54,7 @@ export async function POST(
     colorScheme: (prev?.colorScheme as string) || 'dark',
     logoUrl: (prev?.logoUrl as string) || '',
     backgroundImageUrl: (prev?.backgroundImageUrl as string) || '',
+    videoUrl: (prev?.videoUrl as string) || '',
     createdAt: new Date().toISOString(),
   }
 

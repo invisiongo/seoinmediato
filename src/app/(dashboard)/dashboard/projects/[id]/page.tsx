@@ -93,6 +93,7 @@ export default function ProjectDetailPage() {
     colorScheme: string
     logoUrl: string
     backgroundImageUrl: string
+    videoUrl: string
     facebookUrl: string
     instagramUrl: string
     googleMapsUrl: string
@@ -320,7 +321,7 @@ export default function ProjectDetailPage() {
         const res = await fetch(`/api/projects/${projectId}/landing`)
         if (res.ok) {
           const data = await res.json()
-          setLandingData(data)
+          setLandingData({ videoUrl: '', ...data })
         }
       } catch {
         // Silently fail
@@ -372,6 +373,7 @@ export default function ProjectDetailPage() {
           colorScheme: landingData.colorScheme,
           logoUrl: landingData.logoUrl,
           backgroundImageUrl: landingData.backgroundImageUrl,
+          videoUrl: landingData.videoUrl,
           facebookUrl: landingData.facebookUrl,
           instagramUrl: landingData.instagramUrl,
           googleMapsUrl: landingData.googleMapsUrl,
@@ -2375,6 +2377,16 @@ export default function ProjectDetailPage() {
                         placeholder="https://..."
                       />
                     </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="videoUrl">Video de YouTube (opcional)</Label>
+                    <Input
+                      id="videoUrl"
+                      value={landingData.videoUrl}
+                      onChange={(e) => updateLandingField('videoUrl', e.target.value)}
+                      placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
+                    />
+                    <p className="text-xs text-muted-foreground">Se muestra en la landing justo después de la descripción del negocio. Acepta cualquier formato de URL de YouTube.</p>
                   </div>
                 </CardContent>
               </Card>

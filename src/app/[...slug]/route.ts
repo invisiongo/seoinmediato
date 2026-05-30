@@ -321,6 +321,7 @@ async function handleSeoPage(
     mainSiteUrl,
     landingData: landingDoc ? {
       businessDescription: String(landingDoc.businessDescription || ''),
+      videoUrl: String(landingDoc.videoUrl || ''),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),

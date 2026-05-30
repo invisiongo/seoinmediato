@@ -34,9 +34,15 @@ interface LandingDataFromDb {
   colorScheme: string
   logoUrl: string
   backgroundImageUrl: string
+  videoUrl?: string
   facebookUrl?: string
   instagramUrl?: string
   googleMapsUrl?: string
+}
+
+function extractYouTubeId(url: string): string | null {
+  const m = url.match(/(?:v=|\/v\/|youtu\.be\/|\/embed\/)([a-zA-Z0-9_-]{11})/)
+  return m ? m[1] : null
 }
 
 interface LandingParams {
@@ -367,6 +373,14 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
     <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:800;line-height:1.15;margin:0 0 12px;background:${t.accentGradText};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${ek}</h1>
     <p style="font-size:20px;color:${t.accent};font-weight:600;margin:0 0 16px">${escapeHtml(serviceContent.heroSubtitle)}</p>
     <p style="font-size:16px;color:${t.textMuted};max-width:640px;margin:0 auto 32px;line-height:1.7">${escapeHtml(params.landingData?.businessDescription?.split('\n')[0] || serviceContent.description)}</p>
+
+    ${(() => {
+      const vid = params.landingData?.videoUrl ? extractYouTubeId(params.landingData.videoUrl) : null
+      if (!vid) return ''
+      return `<div style="max-width:780px;margin:0 auto 40px;position:relative;width:100%;padding-bottom:min(56.25%, calc(780px * 0.5625));border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.35)">
+      <iframe src="https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1" title="${escapeHtml(businessName)}" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%" loading="lazy"></iframe>
+    </div>`
+    })()}
 
     <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:32px">
       ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;font-size:16px;font-weight:700;padding:16px 32px;border-radius:50px;text-decoration:none;animation:pulse-green 2s infinite">${iconWhatsApp} ${escapeHtml(ctaWaText)}</a>` : ''}

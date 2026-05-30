@@ -62,6 +62,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     mainSiteUrl: ensureProtocol((parent.redirectUrl as string) || domain),
     landingData: landingDoc ? {
       businessDescription: String(landingDoc.businessDescription || ''),
+      videoUrl: String(landingDoc.videoUrl || ''),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
