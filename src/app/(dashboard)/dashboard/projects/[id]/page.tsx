@@ -2338,14 +2338,21 @@ export default function ProjectDetailPage() {
                       onChange={(e) => updateLandingField('colorScheme', e.target.value)}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     >
-                      <option value="dark">🌑 Dark Pro (morado)</option>
-                      <option value="midnight-gold">✨ Midnight Gold (lujo)</option>
-                      <option value="blue">🌊 Ocean Blue (corporativo)</option>
-                      <option value="green">🌿 Emerald (salud/natura)</option>
-                      <option value="light">☀️ Pure White (minimalista)</option>
-                      <option value="crimson">🔥 Crimson (energía/urgencia)</option>
-                      <option value="orange">🌅 Sunset Orange (creativo)</option>
-                      <option value="purple">💜 Royal Purple (belleza/moda)</option>
+                      <optgroup label="— Claros / Minimalistas —">
+                        <option value="light">Blanco limpio (azul)</option>
+                        <option value="gray">Gris minimal (negro)</option>
+                        <option value="cream">Crema / Beige (terracota)</option>
+                        <option value="green">Verde fresco (salud)</option>
+                        <option value="blue">Azul corporativo (B2B)</option>
+                      </optgroup>
+                      <optgroup label="— Oscuros / Impactantes —">
+                        <option value="dark">Dark Pro (morado)</option>
+                        <option value="dark-navy">Dark Navy (azul)</option>
+                        <option value="midnight-gold">Midnight Gold (lujo)</option>
+                        <option value="crimson">Crimson (energía)</option>
+                        <option value="orange">Sunset Orange (creativo)</option>
+                        <option value="purple">Royal Purple (belleza)</option>
+                      </optgroup>
                     </select>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">

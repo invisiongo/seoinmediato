@@ -90,7 +90,8 @@ interface Theme {
 }
 
 const THEMES: Record<string, Theme> = {
-  // 1. Dark Pro — midnight purple (default)
+  // OSCUROS
+  // 1. Dark Pro — noche con acentos morado/rosa
   'dark': {
     bg: '#060129', bgCard: 'rgba(15,13,40,0.6)', bgCardHover: 'rgba(110,0,255,0.15)',
     border: '#312c52', borderAccent: '#6e00ff', navBg: 'rgba(6,1,41,0.92)',
@@ -101,7 +102,77 @@ const THEMES: Record<string, Theme> = {
     badge: 'rgba(255,10,120,0.12)', badgeText: '#ff0a78',
     starColor: '#ff0a78', footerBg: 'rgba(6,1,41,0.95)',
   },
-  // 2. Midnight Gold — luxury/premium
+  // 2. Dark Navy — azul marino elegante
+  'dark-navy': {
+    bg: '#0a0f1e', bgCard: 'rgba(16,24,48,0.7)', bgCardHover: 'rgba(59,130,246,0.12)',
+    border: '#1e2d4a', borderAccent: '#3b82f6', navBg: 'rgba(10,15,30,0.95)',
+    text: '#cbd5e1', textMuted: '#64748b', textHead: '#f1f5f9',
+    accent: '#3b82f6', accent2: '#60a5fa', accentGrad: 'linear-gradient(135deg,#1d4ed8,#3b82f6)',
+    accentGradText: 'linear-gradient(135deg,#f1f5f9 0%,#cbd5e1 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(59,130,246,0.18)',
+    badge: 'rgba(59,130,246,0.1)', badgeText: '#60a5fa',
+    starColor: '#f59e0b', footerBg: 'rgba(10,15,30,0.98)',
+  },
+
+  // CLAROS / MINIMALISTAS
+  // 3. Clean White — blanco puro, acento azul corporativo
+  'light': {
+    bg: '#ffffff', bgCard: '#f8fafc', bgCardHover: 'rgba(37,99,235,0.04)',
+    border: '#e2e8f0', borderAccent: '#2563eb', navBg: 'rgba(255,255,255,0.97)',
+    text: '#374151', textMuted: '#9ca3af', textHead: '#111827',
+    accent: '#2563eb', accent2: '#3b82f6', accentGrad: 'linear-gradient(135deg,#1d4ed8,#2563eb)',
+    accentGradText: 'linear-gradient(135deg,#111827 0%,#1d4ed8 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(37,99,235,0.08)',
+    badge: 'rgba(37,99,235,0.07)', badgeText: '#2563eb',
+    starColor: '#f59e0b', footerBg: '#1e293b',
+  },
+  // 4. Soft Gray — gris claro, minimalista total, acento negro
+  'gray': {
+    bg: '#f4f4f5', bgCard: '#ffffff', bgCardHover: 'rgba(0,0,0,0.03)',
+    border: '#e4e4e7', borderAccent: '#18181b', navBg: 'rgba(255,255,255,0.97)',
+    text: '#3f3f46', textMuted: '#a1a1aa', textHead: '#09090b',
+    accent: '#18181b', accent2: '#3f3f46', accentGrad: 'linear-gradient(135deg,#09090b,#3f3f46)',
+    accentGradText: 'linear-gradient(135deg,#09090b 0%,#3f3f46 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(0,0,0,0.06)',
+    badge: 'rgba(0,0,0,0.05)', badgeText: '#18181b',
+    starColor: '#f59e0b', footerBg: '#18181b',
+  },
+  // 5. Warm Cream — crema / beige, acento terracota (ideal restaurantes, spas, boutiques)
+  'cream': {
+    bg: '#faf7f2', bgCard: '#ffffff', bgCardHover: 'rgba(180,83,9,0.04)',
+    border: '#e8e0d0', borderAccent: '#b45309', navBg: 'rgba(250,247,242,0.97)',
+    text: '#44403c', textMuted: '#a8a29e', textHead: '#1c1917',
+    accent: '#b45309', accent2: '#d97706', accentGrad: 'linear-gradient(135deg,#92400e,#b45309)',
+    accentGradText: 'linear-gradient(135deg,#1c1917 0%,#44403c 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(180,83,9,0.08)',
+    badge: 'rgba(180,83,9,0.07)', badgeText: '#b45309',
+    starColor: '#d97706', footerBg: '#1c1917',
+  },
+  // 6. Fresh Green — blanco con verde fresco (salud, nutrición, bienestar)
+  'green': {
+    bg: '#f0fdf4', bgCard: '#ffffff', bgCardHover: 'rgba(22,163,74,0.04)',
+    border: '#dcfce7', borderAccent: '#16a34a', navBg: 'rgba(240,253,244,0.97)',
+    text: '#374151', textMuted: '#9ca3af', textHead: '#14532d',
+    accent: '#16a34a', accent2: '#22c55e', accentGrad: 'linear-gradient(135deg,#15803d,#16a34a)',
+    accentGradText: 'linear-gradient(135deg,#14532d 0%,#166534 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(22,163,74,0.08)',
+    badge: 'rgba(22,163,74,0.08)', badgeText: '#16a34a',
+    starColor: '#16a34a', footerBg: '#14532d',
+  },
+  // 7. Corporate Blue — blanco con azul corporativo (B2B, finanzas, legal)
+  'blue': {
+    bg: '#f0f4ff', bgCard: '#ffffff', bgCardHover: 'rgba(37,99,235,0.04)',
+    border: '#dbeafe', borderAccent: '#1d4ed8', navBg: 'rgba(255,255,255,0.97)',
+    text: '#374151', textMuted: '#6b7280', textHead: '#1e3a8a',
+    accent: '#1d4ed8', accent2: '#2563eb', accentGrad: 'linear-gradient(135deg,#1e3a8a,#1d4ed8)',
+    accentGradText: 'linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(29,78,216,0.08)',
+    badge: 'rgba(29,78,216,0.07)', badgeText: '#1d4ed8',
+    starColor: '#f59e0b', footerBg: '#1e3a8a',
+  },
+
+  // OSCUROS ADICIONALES
+  // 8. Midnight Gold — lujo/premium
   'midnight-gold': {
     bg: '#0a0800', bgCard: 'rgba(30,24,4,0.7)', bgCardHover: 'rgba(212,175,55,0.12)',
     border: '#2e2608', borderAccent: '#d4af37', navBg: 'rgba(10,8,0,0.95)',
@@ -112,40 +183,7 @@ const THEMES: Record<string, Theme> = {
     badge: 'rgba(212,175,55,0.12)', badgeText: '#d4af37',
     starColor: '#d4af37', footerBg: 'rgba(10,8,0,0.98)',
   },
-  // 3. Ocean Blue — corporate/B2B
-  'blue': {
-    bg: '#050d1a', bgCard: 'rgba(10,24,50,0.65)', bgCardHover: 'rgba(0,112,243,0.15)',
-    border: '#0d2040', borderAccent: '#0070f3', navBg: 'rgba(5,13,26,0.95)',
-    text: '#b8c8e8', textMuted: '#6b82a8', textHead: '#ffffff',
-    accent: '#0070f3', accent2: '#00d4ff', accentGrad: 'linear-gradient(135deg,#0070f3,#00d4ff)',
-    accentGradText: 'linear-gradient(135deg,#fff 0%,#b8c8e8 100%)',
-    btnPrimary: '#25d366', btnSecondary: 'rgba(0,112,243,0.25)',
-    badge: 'rgba(0,112,243,0.12)', badgeText: '#00d4ff',
-    starColor: '#0070f3', footerBg: 'rgba(5,13,26,0.98)',
-  },
-  // 4. Emerald — health/wellness/nature
-  'green': {
-    bg: '#030f07', bgCard: 'rgba(6,26,12,0.65)', bgCardHover: 'rgba(16,185,129,0.12)',
-    border: '#0a2a14', borderAccent: '#10b981', navBg: 'rgba(3,15,7,0.95)',
-    text: '#a7f3d0', textMuted: '#5a9e7a', textHead: '#ffffff',
-    accent: '#10b981', accent2: '#34d399', accentGrad: 'linear-gradient(135deg,#10b981,#34d399)',
-    accentGradText: 'linear-gradient(135deg,#fff 0%,#a7f3d0 100%)',
-    btnPrimary: '#25d366', btnSecondary: 'rgba(16,185,129,0.2)',
-    badge: 'rgba(16,185,129,0.12)', badgeText: '#34d399',
-    starColor: '#10b981', footerBg: 'rgba(3,15,7,0.98)',
-  },
-  // 5. Pure White — minimal/clean/modern
-  'light': {
-    bg: '#f8fafc', bgCard: '#ffffff', bgCardHover: 'rgba(99,102,241,0.06)',
-    border: '#e2e8f0', borderAccent: '#6366f1', navBg: 'rgba(255,255,255,0.95)',
-    text: '#374151', textMuted: '#6b7280', textHead: '#111827',
-    accent: '#6366f1', accent2: '#8b5cf6', accentGrad: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
-    accentGradText: 'linear-gradient(135deg,#111827 0%,#374151 100%)',
-    btnPrimary: '#25d366', btnSecondary: 'rgba(99,102,241,0.12)',
-    badge: 'rgba(99,102,241,0.08)', badgeText: '#6366f1',
-    starColor: '#f59e0b', footerBg: '#1e293b',
-  },
-  // 6. Crimson — energy/urgency/fitness
+  // 9. Crimson — energía/urgencia/fitness
   'crimson': {
     bg: '#0d0004', bgCard: 'rgba(30,2,8,0.65)', bgCardHover: 'rgba(220,38,38,0.15)',
     border: '#2a0008', borderAccent: '#dc2626', navBg: 'rgba(13,0,4,0.95)',
@@ -156,7 +194,7 @@ const THEMES: Record<string, Theme> = {
     badge: 'rgba(220,38,38,0.12)', badgeText: '#ef4444',
     starColor: '#ef4444', footerBg: 'rgba(13,0,4,0.98)',
   },
-  // 7. Sunset Orange — creative/real estate/food
+  // 10. Sunset Orange — creativo/inmobiliaria/gastronomía
   'orange': {
     bg: '#0c0600', bgCard: 'rgba(28,14,2,0.65)', bgCardHover: 'rgba(249,115,22,0.14)',
     border: '#2a1400', borderAccent: '#f97316', navBg: 'rgba(12,6,0,0.95)',
@@ -166,6 +204,17 @@ const THEMES: Record<string, Theme> = {
     btnPrimary: '#25d366', btnSecondary: 'rgba(249,115,22,0.2)',
     badge: 'rgba(249,115,22,0.12)', badgeText: '#fb923c',
     starColor: '#f97316', footerBg: 'rgba(12,6,0,0.98)',
+  },
+  // 11. Royal Purple — belleza/moda/coaching
+  'purple': {
+    bg: '#080010', bgCard: 'rgba(20,4,40,0.65)', bgCardHover: 'rgba(168,85,247,0.14)',
+    border: '#1e0840', borderAccent: '#a855f7', navBg: 'rgba(8,0,16,0.95)',
+    text: '#e9d5ff', textMuted: '#8b5abf', textHead: '#ffffff',
+    accent: '#a855f7', accent2: '#c084fc', accentGrad: 'linear-gradient(135deg,#a855f7,#ec4899)',
+    accentGradText: 'linear-gradient(135deg,#fff 0%,#e9d5ff 100%)',
+    btnPrimary: '#25d366', btnSecondary: 'rgba(168,85,247,0.2)',
+    badge: 'rgba(168,85,247,0.1)', badgeText: '#c084fc',
+    starColor: '#a855f7', footerBg: 'rgba(8,0,16,0.98)',
   },
   // 8. Royal Purple — beauty/fashion/coaching
   'purple': {
