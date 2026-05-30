@@ -79,7 +79,10 @@ export function KeywordGenerator() {
     if (!currentConfig || generated.length === 0) return
 
     const project = projects.find((p) => p.$id === currentConfig.projectId)
-    if (!project) return
+    if (!project) {
+      toast.error('Proyecto no encontrado. Recarga la página e intenta de nuevo.')
+      return
+    }
 
     setIsSaving(true)
     setSaveProgress({ saved: 0, total: generated.length })
