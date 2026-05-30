@@ -40,8 +40,8 @@ interface LandingDataFromDb {
   googleMapsUrl?: string
 }
 
-function extractYouTubeId(url: string): string | null {
-  const m = url.match(/(?:v=|\/v\/|youtu\.be\/|\/embed\/)([a-zA-Z0-9_-]{11})/)
+function extractYouTubeId(input: string): string | null {
+  const m = input.match(/(?:v=|\/v\/|youtu\.be\/|\/embed\/)([a-zA-Z0-9_-]{11})/)
   return m ? m[1] : null
 }
 

@@ -2384,7 +2384,7 @@ export default function ProjectDetailPage() {
                       id="videoUrl"
                       value={landingData.videoUrl}
                       onChange={(e) => updateLandingField('videoUrl', e.target.value)}
-                      placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
+                      placeholder="URL de YouTube o pega el código iframe completo"
                     />
                     <p className="text-xs text-muted-foreground">Se muestra en la landing justo después de la descripción del negocio. Acepta cualquier formato de URL de YouTube.</p>
                   </div>
