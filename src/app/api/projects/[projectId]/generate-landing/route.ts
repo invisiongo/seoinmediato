@@ -33,10 +33,10 @@ export async function POST(
     niche: (project.niche as string) || '',
     phone: (project.businessPhone as string) || '',
     email: (project.businessEmail as string) || '',
-    location: 'México',
-    businessDescription: (prev?.businessDescription as string) || '',
+    location: (prev?.location as string) || '',
+    businessDescription: (prev?.businessDescription as string) || (project.differentiators as string) || '',
     differentiators: (prev?.differentiators as string) || '',
-    contentTone: (prev?.contentTone as string) || '',
+    contentTone: (prev?.contentTone as string) || 'profesional',
   })
 
   const landingData: Record<string, string> = {
