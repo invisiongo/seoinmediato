@@ -639,13 +639,13 @@ SERVICE_CATEGORIES.push(...AV_CATEGORIES)
 
 // Fallback for unmatched keywords
 const DEFAULT_CONTENT: ServiceContent = {
-  heroSubtitle: 'Tecnología que impulsa tu negocio',
-  description: 'Desarrollamos soluciones tecnológicas que resuelven problemas reales de tu empresa. Software a medida, automatización con IA e integración de sistemas — todo diseñado para generar resultados medibles.',
+  heroSubtitle: 'Servicio profesional con resultados garantizados',
+  description: 'Somos especialistas comprometidos con los resultados de nuestros clientes. Cada proyecto recibe atención personalizada, metodología probada y el respaldo de un equipo con experiencia real en el sector.',
   benefits: [
-    { title: 'Soluciones a medida', desc: 'Cada proyecto es único. Diseñamos exactamente lo que necesitas.' },
-    { title: 'Resultados medibles', desc: 'KPIs claros para que veas el impacto desde el primer mes.' },
-    { title: 'Equipo senior', desc: '14+ años de experiencia en proyectos empresariales reales.' },
-    { title: 'Soporte continuo', desc: 'Acompañamiento antes, durante y después de la entrega.' },
+    { title: 'Atención personalizada', desc: 'Cada cliente es único. Adaptamos nuestra solución a tus necesidades específicas.' },
+    { title: 'Resultados medibles', desc: 'Métricas claras para que veas el impacto desde el primer mes.' },
+    { title: 'Equipo comprometido', desc: 'Profesionales con experiencia real, dedicados al éxito de tu proyecto.' },
+    { title: 'Soporte continuo', desc: 'Acompañamiento antes, durante y después para asegurar tu satisfacción.' },
   ],
 }
 

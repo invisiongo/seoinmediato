@@ -61,6 +61,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     location: '',
     mainSiteUrl: ensureProtocol(domain),
     landingData: landingDoc ? {
+      businessDescription: String(landingDoc.businessDescription || ''),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
