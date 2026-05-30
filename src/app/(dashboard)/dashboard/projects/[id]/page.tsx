@@ -955,14 +955,14 @@ export default function ProjectDetailPage() {
             <Key className="mr-1 h-4 w-4" />
             Keywords ({(hasRegions && aggKw ? aggKw.total : kwStats.total).toLocaleString()})
           </TabsTrigger>
+          <TabsTrigger value="landing">
+            <Layout className="mr-1 h-4 w-4" />
+            Landing
+          </TabsTrigger>
           <TabsTrigger value="indexing">
             <Globe className="mr-1 h-4 w-4" />
             Indexacion
             {(isRunning || anyRegionRunning) && <Loader2 className="ml-1 h-3 w-3 animate-spin" />}
-          </TabsTrigger>
-          <TabsTrigger value="landing">
-            <Layout className="mr-1 h-4 w-4" />
-            Landing
           </TabsTrigger>
           {!isRegion && (
             <TabsTrigger value="regions">

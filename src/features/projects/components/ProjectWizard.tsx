@@ -31,7 +31,7 @@ export function ProjectWizard({
   hasIndexingJob,
   onMarkCompleted,
 }: ProjectWizardProps) {
-  const [isCollapsed, setIsCollapsed] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const [expandedStep, setExpandedStep] = useState<number | null>(null)
 
   const wizardState: Record<string, boolean> = (() => {
