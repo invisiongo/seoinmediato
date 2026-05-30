@@ -47,21 +47,32 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const domain = getDomainFromHost(host)
 
   try {
-    // ─── Sitemap page: sitemap-{projectSlug}-N.xml (check BEFORE index) ─
-    const sitemapPageMatch = fullPath.match(/^sitemap-([a-z0-9-]+?)-(\d+)\.xml$/)
-    if (sitemapPageMatch) {
-      return await handleSitemapPage(domain, sitemapPageMatch[1], parseInt(sitemapPageMatch[2], 10))
-    }
+    // ─── Sitemap routing ────────────────────────────────────────────
+    const sitemapMatch = fullPath.match(/^sitemap-([a-z0-9-]+)\.xml$/)
+    if (sitemapMatch) {
+      const possibleSlug = sitemapMatch[1]
 
-    // ─── Sitemap index: sitemap-{projectSlug}.xml ───────────────────
-    const sitemapIndexMatch = fullPath.match(/^sitemap-([a-z0-9-]+)\.xml$/)
-    if (sitemapIndexMatch) {
-      const projectSlug = sitemapIndexMatch[1]
-      // Legacy numeric page (sitemap-1.xml, sitemap-2.xml)
-      if (/^\d+$/.test(projectSlug)) {
-        return await handleSitemapPage(domain, null, parseInt(projectSlug, 10))
+      // Legacy numeric page: sitemap-1.xml, sitemap-2.xml
+      if (/^\d+$/.test(possibleSlug)) {
+        return await handleSitemapPage(domain, null, parseInt(possibleSlug, 10))
       }
-      return await handleSitemapIndex(domain, projectSlug)
+
+      // If slug ends with -N it could be either:
+      //   (a) index of project whose name ends in a number ("Prueba 1" → "prueba-1")
+      //   (b) page N of a project named without a trailing number
+      // Strategy: always try index lookup first; fall back to page if not found.
+      const pageMatch = possibleSlug.match(/^(.+)-(\d+)$/)
+      if (pageMatch) {
+        const { findProjectBySitemapSlug: find } = await import('@/features/sites/services/projectLookup')
+        const indexProject = await find(domain, possibleSlug)
+        if (indexProject) {
+          return await handleSitemapIndex(domain, possibleSlug)
+        }
+        // Not an index — treat trailing number as page number
+        return await handleSitemapPage(domain, pageMatch[1], parseInt(pageMatch[2], 10))
+      }
+
+      return await handleSitemapIndex(domain, possibleSlug)
     }
 
     // ─── SEO Page ─────────────────────────────────────────────────────
