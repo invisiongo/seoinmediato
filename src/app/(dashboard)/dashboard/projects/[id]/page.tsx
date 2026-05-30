@@ -2143,7 +2143,7 @@ export default function ProjectDetailPage() {
                   {isGeneratingLanding ? 'Regenerando...' : 'Regenerar con IA'}
                 </Button>
                 <Button variant="outline" asChild className="gap-2">
-                  <a href={`${seoTestBase}/`} target="_blank" rel="noopener noreferrer">
+                  <a href={`${seoTestBase}/landing-home`} target="_blank" rel="noopener noreferrer">
                     <Eye className="h-4 w-4" />
                     Vista previa
                   </a>
