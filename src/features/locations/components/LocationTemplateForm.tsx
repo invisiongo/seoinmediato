@@ -48,7 +48,7 @@ export function LocationTemplateForm({ template, onSubmit, onCancel }: Props) {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Ej: CDMX - Alcaldias y Colonias"
+                placeholder="Ej: Quito Norte - Sectores"
                 required
               />
             </div>
@@ -58,7 +58,7 @@ export function LocationTemplateForm({ template, onSubmit, onCancel }: Props) {
                 id="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                placeholder="Ej: Mexico"
+                placeholder="Ej: Ecuador"
                 required
               />
             </div>
@@ -75,7 +75,7 @@ export function LocationTemplateForm({ template, onSubmit, onCancel }: Props) {
               id="locations"
               value={locations}
               onChange={(e) => setLocations(e.target.value)}
-              placeholder="Polanco&#10;Condesa&#10;Roma Norte&#10;Del Valle"
+              placeholder="Ej: Quito&#10;Guayaquil&#10;Cuenca&#10;Ambato"
               rows={10}
               required
             />
