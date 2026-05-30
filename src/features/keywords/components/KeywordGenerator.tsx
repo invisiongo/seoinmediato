@@ -61,14 +61,18 @@ export function KeywordGenerator() {
     }
 
     setCurrentConfig(config)
-    const result = generateCombinations(
+    const all = generateCombinations(
       config.services,
       config.prefixes,
       config.suffixes,
       config.locations
     )
+    const result = config.keywordLimit > 0 ? all.slice(0, config.keywordLimit) : all
     setGenerated(result)
-    toast.success(`${result.length.toLocaleString()} keywords generadas`)
+    const limitMsg = config.keywordLimit > 0 && result.length < all.length
+      ? ` (limitado de ${all.length.toLocaleString()})`
+      : ''
+    toast.success(`${result.length.toLocaleString()} keywords generadas${limitMsg}`)
   }
 
   const handleSave = async () => {

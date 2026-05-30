@@ -34,6 +34,7 @@ export interface KeywordConfigState {
   prefixes: string[]
   suffixes: string[]
   locations: string[]
+  keywordLimit: number
 }
 
 function parseTextFile(text: string): string[] {
@@ -99,6 +100,7 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
   const [servicesText, setServicesText] = useState('')
   const [locationsText, setLocationsText] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
+  const [keywordLimit, setKeywordLimit] = useState(0)
 
   const [activePrefixes, setActivePrefixes] = useState<Set<string>>(
     new Set(DEFAULT_PREFIX_MODIFIERS)
@@ -165,7 +167,7 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
   }
 
   const handleGenerate = () => {
-    onGenerate({ projectId, services, prefixes, suffixes, locations })
+    onGenerate({ projectId, services, prefixes, suffixes, locations, keywordLimit })
   }
 
   const onServicesFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -480,13 +482,33 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
                 : '0'}
             </p>
           </div>
-          <Button
-            size="lg"
-            onClick={handleGenerate}
-            disabled={!projectId || services.length === 0 || prefixes.length === 0}
-          >
-            Generar keywords
-          </Button>
+          <div className="flex flex-col items-center gap-3 sm:items-end">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="keywordLimit" className="text-sm whitespace-nowrap">Limite de keywords</Label>
+              <input
+                id="keywordLimit"
+                type="number"
+                min={0}
+                step={1000}
+                value={keywordLimit || ''}
+                onChange={(e) => setKeywordLimit(e.target.value ? Math.max(0, parseInt(e.target.value)) : 0)}
+                placeholder="Sin limite"
+                className="w-32 rounded-md border border-input bg-background px-3 py-1.5 text-sm"
+              />
+            </div>
+            {keywordLimit > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Se generaran max. {keywordLimit.toLocaleString()} keywords
+              </p>
+            )}
+            <Button
+              size="lg"
+              onClick={handleGenerate}
+              disabled={!projectId || services.length === 0 || prefixes.length === 0}
+            >
+              Generar keywords
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
