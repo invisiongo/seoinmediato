@@ -33,7 +33,8 @@ function escapeHtml(str: string): string {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { slug: slugSegments } = await params
 
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || ''
+  // Use 'host' (same as middleware) — x-forwarded-host may point to the app domain in Traefik
+  const host = request.headers.get('host') || ''
 
   // App host: this catch-all should NOT handle dashboard routes.
   // More specific routes (/login, /dashboard/*) take priority in Next.js,

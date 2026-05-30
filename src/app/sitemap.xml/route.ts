@@ -3,7 +3,7 @@ import { isAppHost, getDomainFromHost, findProjectsByDomain } from '@/features/s
 import { getSitemapUrl } from '@/shared/lib/seo-urls'
 
 export async function GET(request: NextRequest) {
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || ''
+  const host = request.headers.get('host') || ''
 
   // App host: return empty sitemap
   if (isAppHost(host)) {

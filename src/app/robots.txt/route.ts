@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isAppHost, getDomainFromHost, findProjectByDomain } from '@/features/sites/services/projectLookup'
 
 export async function GET(request: NextRequest) {
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || ''
+  const host = request.headers.get('host') || ''
 
   // App host: return a basic robots.txt for the dashboard
   if (isAppHost(host)) {
