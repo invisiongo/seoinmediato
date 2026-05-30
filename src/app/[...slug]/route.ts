@@ -48,28 +48,28 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   try {
     // ─── Sitemap routing ────────────────────────────────────────────
+    // Strategy: ALWAYS try index lookup first by full slug.
+    // Only if no project matches, parse trailing -N as a page number.
+    // This handles any project name (numbers, hyphens, etc.) without ambiguity.
     const sitemapMatch = fullPath.match(/^sitemap-([a-z0-9-]+)\.xml$/)
     if (sitemapMatch) {
       const possibleSlug = sitemapMatch[1]
+      const { findProjectBySitemapSlug: findBySitemapSlug } = await import('@/features/sites/services/projectLookup')
 
-      // Legacy numeric page: sitemap-1.xml, sitemap-2.xml
-      if (/^\d+$/.test(possibleSlug)) {
-        return await handleSitemapPage(domain, null, parseInt(possibleSlug, 10))
+      const indexProject = await findBySitemapSlug(domain, possibleSlug)
+      if (indexProject) {
+        return await handleSitemapIndex(domain, possibleSlug)
       }
 
-      // If slug ends with -N it could be either:
-      //   (a) index of project whose name ends in a number ("Prueba 1" → "prueba-1")
-      //   (b) page N of a project named without a trailing number
-      // Strategy: always try index lookup first; fall back to page if not found.
+      // No project matched — try interpreting trailing -N as page number
       const pageMatch = possibleSlug.match(/^(.+)-(\d+)$/)
       if (pageMatch) {
-        const { findProjectBySitemapSlug: find } = await import('@/features/sites/services/projectLookup')
-        const indexProject = await find(domain, possibleSlug)
-        if (indexProject) {
-          return await handleSitemapIndex(domain, possibleSlug)
-        }
-        // Not an index — treat trailing number as page number
         return await handleSitemapPage(domain, pageMatch[1], parseInt(pageMatch[2], 10))
+      }
+
+      // Pure numeric legacy: sitemap-1.xml
+      if (/^\d+$/.test(possibleSlug)) {
+        return await handleSitemapPage(domain, null, parseInt(possibleSlug, 10))
       }
 
       return await handleSitemapIndex(domain, possibleSlug)
