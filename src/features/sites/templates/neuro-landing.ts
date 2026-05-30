@@ -35,6 +35,7 @@ interface LandingDataFromDb {
   logoUrl: string
   backgroundImageUrl: string
   videoUrl?: string
+  faqs?: string
   facebookUrl?: string
   instagramUrl?: string
   googleMapsUrl?: string
@@ -251,6 +252,7 @@ export function generateNeuroLanding(params: LandingParams): string {
   let testimonials: Array<{ name: string; text: string; rating: number; role?: string }> = []
   let stats: Array<{ value: string; label: string }> = []
   let socialMessages: string[] = []
+  let faqs: Array<{ question: string; answer: string }> = []
   const ctaWaText = params.landingData?.ctaWhatsappText || 'WhatsApp Directo'
   const ctaCallText = params.landingData?.ctaCallText || 'Llamar Ahora'
   const logoUrl = params.landingData?.logoUrl || ''
@@ -279,6 +281,7 @@ export function generateNeuroLanding(params: LandingParams): string {
     } catch { /* default */ }
     try { const st = JSON.parse(params.landingData.stats); if (Array.isArray(st)) stats = st } catch { /* default */ }
     try { const sm = JSON.parse(params.landingData.socialProofMessages); if (Array.isArray(sm)) socialMessages = sm } catch { /* default */ }
+    try { const fq = JSON.parse(params.landingData.faqs || '[]'); if (Array.isArray(fq)) faqs = fq } catch { /* default */ }
   }
 
   // Default stats if none configured
@@ -473,6 +476,23 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
       </div>`).join('\n      ')}
     </div>
   </section>
+
+  ${faqs.length > 0 ? `<!-- FAQ -->
+  <section id="faq" style="max-width:800px;margin:0 auto;padding:60px 20px">
+    <div style="text-align:center;margin-bottom:40px">
+      <span style="font-size:13px;color:${t.accent};font-weight:600;text-transform:uppercase;letter-spacing:2px">Preguntas frecuentes</span>
+      <h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:12px 0 0">Lo que todos preguntan</h2>
+    </div>
+    <div style="space-y:12px">
+      ${faqs.map((faq, i) => `<details style="background:${t.bgCard};border:1px solid ${t.border};border-radius:12px;margin-bottom:10px;overflow:hidden" ${i === 0 ? 'open' : ''}>
+        <summary style="padding:18px 20px;cursor:pointer;font-size:15px;font-weight:600;color:${t.textHead};list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ${escapeHtml(faq.question)}
+          <span style="font-size:20px;color:${t.accent};margin-left:12px;flex-shrink:0">+</span>
+        </summary>
+        <div style="padding:0 20px 18px;font-size:14px;color:${t.textMuted};line-height:1.7">${escapeHtml(faq.answer)}</div>
+      </details>`).join('')}
+    </div>
+  </section>` : ''}
 
   <!-- CTA FINAL -->
   <section id="contacto" style="max-width:800px;margin:0 auto;padding:60px 20px">

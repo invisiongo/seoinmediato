@@ -63,6 +63,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     landingData: landingDoc ? {
       businessDescription: String(landingDoc.businessDescription || ''),
       videoUrl: String(landingDoc.videoUrl || ''),
+      faqs: String(landingDoc.faqs || '[]'),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
@@ -101,6 +102,23 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     ...(landingDoc && landingDoc.googleMapsUrl ? { hasMap: String(landingDoc.googleMapsUrl) } : {}),
   })
 
+  let homeFaqs: Array<{ question: string; answer: string }> = []
+  try {
+    const faqRaw = String(landingDoc?.faqs || '[]')
+    const parsed = JSON.parse(faqRaw)
+    if (Array.isArray(parsed)) homeFaqs = parsed
+  } catch { /* no faqs */ }
+
+  const schemaFaq = homeFaqs.length > 0 ? JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: homeFaqs.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  }) : null
+
   const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -118,6 +136,7 @@ ${logoUrl ? `<link rel="icon" href="${escapeHtml(logoUrl)}" type="image/png">` :
 ${logoUrl ? `<meta property="og:image" content="${escapeHtml(logoUrl)}">` : ''}
 <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
 <script type="application/ld+json">${schemaLocalBusiness}</script>
+${schemaFaq ? `<script type="application/ld+json">${schemaFaq}</script>` : ''}
 </head>
 ${neuroHtml}
 </html>`

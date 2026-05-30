@@ -49,6 +49,7 @@ export async function POST(
     testimonials: JSON.stringify(content.testimonials),
     stats: JSON.stringify(content.stats),
     socialProofMessages: JSON.stringify(content.socialProofMessages),
+    faqs: JSON.stringify(content.faqs || []),
     ctaWhatsappText: (prev?.ctaWhatsappText as string) || 'WhatsApp ahora',
     ctaCallText: (prev?.ctaCallText as string) || 'Llamar ahora',
     colorScheme: (prev?.colorScheme as string) || 'dark',

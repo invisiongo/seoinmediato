@@ -307,6 +307,32 @@ async function handleSeoPage(
     ...(socialLinks.googleMaps && { hasMap: socialLinks.googleMaps }),
   })
 
+  const schemaBreadcrumb = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: businessName, item: domainUrl },
+      { '@type': 'ListItem', position: 2, name: kw, item: canonicalUrl },
+    ],
+  })
+
+  let faqsForSchema: Array<{ question: string; answer: string }> = []
+  try {
+    const faqRaw = String(landingDoc?.faqs || '[]')
+    const parsed = JSON.parse(faqRaw)
+    if (Array.isArray(parsed)) faqsForSchema = parsed
+  } catch { /* no faqs */ }
+
+  const schemaFaq = faqsForSchema.length > 0 ? JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqsForSchema.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  }) : null
+
   const schemaProduct = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -334,6 +360,7 @@ async function handleSeoPage(
     landingData: landingDoc ? {
       businessDescription: String(landingDoc.businessDescription || ''),
       videoUrl: String(landingDoc.videoUrl || ''),
+      faqs: String(landingDoc.faqs || '[]'),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
@@ -376,6 +403,8 @@ ${ogImageTag}
 <script type="application/ld+json">${schemaItemPage}</script>
 <script type="application/ld+json">${schemaLocalBusiness}</script>
 <script type="application/ld+json">${schemaProduct}</script>
+<script type="application/ld+json">${schemaBreadcrumb}</script>
+${schemaFaq ? `<script type="application/ld+json">${schemaFaq}</script>` : ''}
 ${redirectScript}
 </head>
 ${bodyContent}

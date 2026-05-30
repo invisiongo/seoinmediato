@@ -17,6 +17,7 @@ interface LandingContent {
   testimonials: Array<{ name: string; text: string; rating: number; role: string }>
   stats: Array<{ value: string; label: string }>
   socialProofMessages: string[]
+  faqs: Array<{ question: string; answer: string }>
 }
 
 const TONE_MAP: Record<string, string> = {
@@ -51,7 +52,10 @@ FORMATO DE SALIDA (JSON estricto, sin markdown):
   "stats": [
     { "value": "Número o símbolo impactante específico del nicho (ej: 847, 98%, +500, $2M+)", "label": "Qué representa ese número en 3-5 palabras" }
   ],
-  "socialProofMessages": ["Mensaje de prueba social tipo notificación emergente. Ej: 'Carlos de Quito acaba de solicitar una consulta', 'María reservó su cita hace 3 minutos'"]
+  "socialProofMessages": ["Mensaje de prueba social tipo notificación emergente. Ej: 'Carlos de Quito acaba de solicitar una consulta', 'María reservó su cita hace 3 minutos'"],
+  "faqs": [
+    { "question": "Pregunta frecuente real que haría alguien buscando este servicio en Google", "answer": "Respuesta completa, útil y específica al nicho. Mínimo 60 palabras. Incluye detalles que demuestren autoridad y experiencia." }
+  ]
 }
 
 REGLAS:
@@ -59,6 +63,7 @@ REGLAS:
 - testimonials: exactamente 4, con nombres latinoamericanos reales, resultados concretos del nicho
 - stats: exactamente 4 estadísticas impactantes y creíbles para el nicho
 - socialProofMessages: 10 mensajes variados, con nombres y ciudades del país indicado
+- faqs: exactamente 6 preguntas frecuentes reales del nicho. Deben ser las preguntas que la gente busca en Google (ej: "¿Cuánto cuesta...?", "¿Cuánto tarda...?", "¿Qué incluye...?", "¿Es seguro...?"). Las respuestas deben ser útiles, específicas y de mínimo 60 palabras cada una.
 - Todo el contenido debe ser 100% relevante al nicho específico
 - NUNCA mencionar tecnología, software o desarrollo si el nicho no es tech
 - Responde SOLO el JSON, sin texto adicional`
