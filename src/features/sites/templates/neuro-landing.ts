@@ -216,17 +216,6 @@ const THEMES: Record<string, Theme> = {
     badge: 'rgba(168,85,247,0.1)', badgeText: '#c084fc',
     starColor: '#a855f7', footerBg: 'rgba(8,0,16,0.98)',
   },
-  // 8. Royal Purple — beauty/fashion/coaching
-  'purple': {
-    bg: '#080010', bgCard: 'rgba(20,4,40,0.65)', bgCardHover: 'rgba(168,85,247,0.14)',
-    border: '#1e0840', borderAccent: '#a855f7', navBg: 'rgba(8,0,16,0.95)',
-    text: '#e9d5ff', textMuted: '#8b5abf', textHead: '#ffffff',
-    accent: '#a855f7', accent2: '#c084fc', accentGrad: 'linear-gradient(135deg,#a855f7,#ec4899)',
-    accentGradText: 'linear-gradient(135deg,#fff 0%,#e9d5ff 100%)',
-    btnPrimary: '#25d366', btnSecondary: 'rgba(168,85,247,0.2)',
-    badge: 'rgba(168,85,247,0.1)', badgeText: '#c084fc',
-    starColor: '#a855f7', footerBg: 'rgba(8,0,16,0.98)',
-  },
 }
 
 export function generateNeuroLanding(params: LandingParams): string {
