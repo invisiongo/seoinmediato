@@ -1637,36 +1637,48 @@ export default function ProjectDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="editRate" className="text-sm whitespace-nowrap">
-                    URLs por ejecucion:
-                  </Label>
-                  <Input
-                    id="editRate"
-                    type="number"
-                    value={editRate}
-                    onChange={(e) => setEditRate(e.target.value)}
-                    className="w-28"
-                    min={1}
-                    disabled={isRunning}
-                  />
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="editRate" className="text-sm whitespace-nowrap">
+                      URLs por ciclo:
+                    </Label>
+                    <Input
+                      id="editRate"
+                      type="number"
+                      value={editRate}
+                      onChange={(e) => setEditRate(e.target.value)}
+                      className="w-28"
+                      min={1}
+                      max={200}
+                      disabled={isRunning}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Máx. URLs que se envían a Google por ejecución automática. Google permite 200/día por token.</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="indexOrder" className="text-sm whitespace-nowrap">
-                    Orden:
-                  </Label>
-                  <select
-                    id="indexOrder"
-                    value={indexingOrder}
-                    onChange={(e) => setIndexingOrder(e.target.value)}
-                    disabled={isRunning}
-                    className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-                  >
-                    <option value="sequential">Secuencial</option>
-                    <option value="random">Aleatorio</option>
-                    <option value="by_location">Por ubicacion</option>
-                    <option value="by_priority">Por prioridad</option>
-                  </select>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="indexOrder" className="text-sm whitespace-nowrap">
+                      Orden de envío:
+                    </Label>
+                    <select
+                      id="indexOrder"
+                      value={indexingOrder}
+                      onChange={(e) => setIndexingOrder(e.target.value)}
+                      disabled={isRunning}
+                      className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="sequential">Secuencial — en orden de creación</option>
+                      <option value="random">Aleatorio — orden mezclado</option>
+                      <option value="by_location">Por ubicación — rota entre ciudades (Quito, Guayaquil, Cuenca...)</option>
+                      <option value="by_priority">Por prioridad — keywords cortas primero (más búsquedas)</option>
+                    </select>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {indexingOrder === 'by_location' && 'Google ve variedad geográfica desde el día 1. Recomendado para negocios locales.'}
+                    {indexingOrder === 'by_priority' && 'Indexa primero las keywords más genéricas y de mayor volumen de búsqueda.'}
+                    {indexingOrder === 'sequential' && 'Indexa en el mismo orden en que se generaron las keywords.'}
+                    {indexingOrder === 'random' && 'Orden aleatorio. Útil para evitar patrones detectables.'}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">

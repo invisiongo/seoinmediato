@@ -55,10 +55,20 @@ export async function runIndexingCycle(): Promise<{ launched: number; skipped: n
       const regions = projects.documents.filter(p => (p.parentProjectId as string) === project.$id)
       const projectsToIndex = regions.length > 0 ? regions : [project]
 
+      // indexingRate = max URLs per cron run for this project (default 200 = Google daily quota)
+      const indexingRate = (project.indexingRate as number) || 200
+
       const regionsWithWork: Array<{ project: Record<string, unknown>; keywords: Array<{ slug: string; keyword: string }> }> = []
+      let rateRemaining = indexingRate
+
       for (const proj of projectsToIndex) {
+        if (rateRemaining <= 0) break
         const kws = await getKeywordsByStatus(proj.$id, ['generated', 'pending', 'failed'])
-        if (kws.length > 0) regionsWithWork.push({ project: proj, keywords: kws })
+        if (kws.length > 0) {
+          const limited = kws.slice(0, rateRemaining)
+          regionsWithWork.push({ project: proj, keywords: limited })
+          rateRemaining -= limited.length
+        }
       }
 
       if (regionsWithWork.length === 0) { skipped++; continue }
