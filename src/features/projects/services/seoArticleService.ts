@@ -7,12 +7,12 @@ interface ArticleInput {
   email: string
 }
 
-const SYSTEM_PROMPT = `Eres un experto en SEO y copywriting para agencias de tecnologia en Mexico. Escribes contenido optimizado para posicionamiento local que supera los 1,200 palabras.
+const SYSTEM_PROMPT = `Eres un experto en SEO y copywriting. Escribes contenido optimizado para posicionamiento local que supera los 1,200 palabras.
 
 IMPORTANTE: Retorna SOLO el HTML del body (sin <!DOCTYPE>, sin <html>, sin <head>). Solo el contenido desde el primer <h1> hasta el ultimo parrafo. Incluye estilos inline basicos para que se vea bien.`
 
 export async function generateSeoArticle(input: ArticleInput): Promise<string> {
-  const userPrompt = `Escribe un articulo SEO completo en espanol de minimo 1,200 palabras para una agencia de software llamada ${input.businessName} ubicada en {ubicacion}, Mexico.
+  const userPrompt = `Escribe un articulo SEO completo en espanol de minimo 1,200 palabras para el negocio llamado ${input.businessName} (nicho: ${input.niche || 'servicios profesionales'}) ubicado en {ubicacion}.
 
 El articulo debe usar exactamente estos placeholders (no los reemplaces, dejalos tal cual):
 - {keyword} → la palabra clave principal

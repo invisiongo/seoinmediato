@@ -14,12 +14,6 @@ import {
 } from '@/components/ui/select'
 import type { Project, ProjectFormData } from '../types'
 
-const MX_STATES = ['CDMX', 'Jalisco', 'Nuevo León', 'Estado de México', 'Puebla', 'Guanajuato', 'Chihuahua', 'Veracruz', 'Michoacán', 'Yucatán']
-const US_STATES = ['California', 'Texas', 'Florida', 'New York', 'Illinois', 'Pennsylvania', 'Ohio', 'Georgia', 'North Carolina', 'Michigan']
-
-const MX_HINT = /m[eé]xico|mx\b/i
-const US_HINT = /\b(usa|us|united states|estados unidos)\b/i
-
 function generateNameSuggestions(existingNames: string[]): string[] {
   if (existingNames.length === 0) return []
 
@@ -27,60 +21,13 @@ function generateNameSuggestions(existingNames: string[]): string[] {
   const usedSet = new Set(existingNames.map(n => n.toLowerCase()))
 
   for (const name of existingNames) {
-    // 1) Numeric suffix: "Agencia SEO CDMX 1" → suggest 2, 3
+    // Numeric suffix: "Agencia SEO 1" → suggest 2, 3
     const numMatch = name.match(/^(.+?)\s+(\d+)$/)
     if (numMatch) {
       const base = numMatch[1]
       const num = parseInt(numMatch[2], 10)
       for (let i = num + 1; i <= num + 4; i++) {
         const s = `${base} ${i}`
-        if (!usedSet.has(s.toLowerCase())) suggestions.push(s)
-      }
-      continue
-    }
-
-    // 2) Known region in name: swap for other regions in same list
-    let matchedRegion: string | null = null
-    let regionList: string[] = []
-
-    for (const region of MX_STATES) {
-      if (name.includes(region)) {
-        matchedRegion = region
-        regionList = MX_STATES
-        break
-      }
-    }
-    if (!matchedRegion) {
-      for (const region of US_STATES) {
-        if (name.includes(region)) {
-          matchedRegion = region
-          regionList = US_STATES
-          break
-        }
-      }
-    }
-
-    if (matchedRegion) {
-      const base = name.replace(matchedRegion, '').replace(/\s{2,}/g, ' ').trim()
-      for (const region of regionList) {
-        if (region === matchedRegion) continue
-        const s = base ? `${base} ${region}` : region
-        if (!usedSet.has(s.toLowerCase())) suggestions.push(s)
-      }
-      continue
-    }
-
-    // 3) Country hint: "Invision México" → append MX states
-    if (MX_HINT.test(name)) {
-      for (const region of MX_STATES) {
-        const s = `${name} ${region}`
-        if (!usedSet.has(s.toLowerCase())) suggestions.push(s)
-      }
-      continue
-    }
-    if (US_HINT.test(name)) {
-      for (const region of US_STATES) {
-        const s = `${name} ${region}`
         if (!usedSet.has(s.toLowerCase())) suggestions.push(s)
       }
       continue

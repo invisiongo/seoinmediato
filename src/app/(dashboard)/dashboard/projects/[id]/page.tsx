@@ -2440,7 +2440,7 @@ export default function ProjectDetailPage() {
               <CardContent>
                 <div className="flex gap-2 max-w-md">
                   <Input
-                    placeholder="Nombre de la region (ej: CDMX, Guadalajara)"
+                    placeholder="Ej: Quito Norte, Zona Centro, Sur"
                     value={newRegionName}
                     onChange={(e) => setNewRegionName(e.target.value)}
                   />

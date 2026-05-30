@@ -164,7 +164,7 @@ export function KeywordImport({ projects }: Props) {
           <Textarea
             value={keywordsText}
             onChange={(e) => setKeywordsText(e.target.value)}
-            placeholder={"desarrollo de software a medida en cdmx\nconsultoria en inteligencia artificial en merida\nplataformas saas para empresas en mexico"}
+            placeholder={"posicionamiento web en quito\nservicio de contabilidad en guayaquil\nclinica dental en cuenca"}
             rows={12}
           />
           <p className="mt-1 text-xs text-muted-foreground">
