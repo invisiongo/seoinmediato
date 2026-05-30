@@ -287,7 +287,7 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
           <Textarea
             value={servicesText}
             onChange={(e) => setServicesText(e.target.value)}
-            placeholder={"Desarrollo de software\nCRM personalizado\nPlataforma con IA\nERP empresarial\nAutomatizacion de procesos"}
+            placeholder={"Ej: Corte de cabello\nColoracion\nMasaje relajante\nLimpieza facial\nManicure"}
             rows={6}
           />
           <p className="mt-1 text-xs text-muted-foreground">{services.length} servicios</p>
@@ -325,7 +325,7 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="space-y-2">
-            <Label>Template de ubicaciones</Label>
+            <Label>Plantilla de ubicaciones guardada</Label>
             <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona un template (opcional)" />
@@ -352,7 +352,7 @@ export function KeywordConfigForm({ projects, templates, onGenerate }: Props) {
           <Textarea
             value={locationsText}
             onChange={(e) => setLocationsText(e.target.value)}
-            placeholder={"Coyoacan\nBenito Juarez\nPolanco\nReforma\nSanta Fe"}
+            placeholder={"Ej: Quito\nGuayaquil\nCuenca\nAmbato\nManta"}
             rows={6}
           />
           <p className="text-xs text-muted-foreground">
