@@ -85,7 +85,7 @@ const SERVICE_CATEGORIES: ServiceCategory[] = [
     patterns: ['desarrollo de software para empresas', 'empresa de desarrollo de software'],
     content: {
       heroSubtitle: 'Tu socio tecnológico de confianza',
-      description: 'Somos una agencia de desarrollo de software con 14+ años de experiencia creando soluciones empresariales. Desde sistemas internos hasta plataformas públicas, transformamos ideas en software que funciona.',
+      description: 'Somos una agencia especializada en desarrollo de software empresarial. Desde sistemas internos hasta plataformas públicas, transformamos ideas en software que funciona y genera resultados reales.',
       benefits: [
         { title: 'Equipo senior', desc: 'Desarrolladores con experiencia real en proyectos empresariales complejos.' },
         { title: 'Metodología probada', desc: 'Entregas incrementales para que veas resultados desde la primera semana.' },

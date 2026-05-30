@@ -287,7 +287,7 @@ export function ProjectForm({ project, onSubmit, onCancel }: Props) {
                 id="businessPhone"
                 value={businessPhone}
                 onChange={(e) => setBusinessPhone(e.target.value)}
-                placeholder="+52 55 1234 5678"
+                placeholder="+1 234 567 8900"
               />
             </div>
             <div className="space-y-2">
@@ -401,7 +401,7 @@ export function ProjectForm({ project, onSubmit, onCancel }: Props) {
                 id="differentiators"
                 value={differentiators}
                 onChange={(e) => setDifferentiators(e.target.value)}
-                placeholder="Ej: 15 anos de experiencia, equipo certificado, garantia de satisfaccion..."
+                placeholder="Ej: equipo certificado, atencion personalizada, garantia de satisfaccion, precios competitivos"
               />
               <p className="text-xs text-muted-foreground">
                 Separados por coma. Se usan en los articulos SEO para hacer contenido unico por cliente.

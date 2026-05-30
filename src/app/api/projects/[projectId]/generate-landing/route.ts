@@ -27,14 +27,17 @@ export async function POST(
   ])
   const prev = existing.documents.length > 0 ? existing.documents[0] : null
 
-  // Generate content with AI, using existing differentiators/tone if available
+  // Generate content with AI
+  // - differentiators: stored in project_landing (set during onboarding in ProjectForm)
+  // - contentTone: stored in project_landing (set during onboarding)
+  // - businessDescription: always regenerated fresh by IA (do not pass old one to avoid stale loops)
   const content = await generateLandingContent({
     businessName: (project.businessName as string) || (project.name as string),
     niche: (project.niche as string) || '',
     phone: (project.businessPhone as string) || '',
     email: (project.businessEmail as string) || '',
-    location: (prev?.location as string) || '',
-    businessDescription: (prev?.businessDescription as string) || (project.differentiators as string) || '',
+    location: '',
+    businessDescription: '',
     differentiators: (prev?.differentiators as string) || '',
     contentTone: (prev?.contentTone as string) || 'profesional',
   })

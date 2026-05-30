@@ -49,7 +49,7 @@ FORMATO DE SALIDA (JSON estricto, sin markdown):
     { "name": "Nombre Apellido", "text": "Testimonio específico con resultado concreto: números, tiempo, antes/después. Mínimo 80 palabras. Debe sonar humano y real, no corporativo.", "rating": 5, "role": "Cargo o descripción del cliente" }
   ],
   "stats": [
-    { "value": "Número o símbolo impactante (ej: 847, 14+, 98%, $2M+)", "label": "Qué representa ese número en 3-5 palabras" }
+    { "value": "Número o símbolo impactante específico del nicho (ej: 847, 98%, +500, $2M+)", "label": "Qué representa ese número en 3-5 palabras" }
   ],
   "socialProofMessages": ["Mensaje de prueba social tipo notificación emergente. Ej: 'Carlos de Quito acaba de solicitar una consulta', 'María reservó su cita hace 3 minutos'"]
 }
