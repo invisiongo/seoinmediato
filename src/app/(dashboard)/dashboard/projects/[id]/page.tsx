@@ -96,12 +96,14 @@ export default function ProjectDetailPage() {
     videoUrl: string
     galleryTitle: string
     gallerySubtitle: string
-    photo1: string; photo1Caption: string
-    photo2: string; photo2Caption: string
-    photo3: string; photo3Caption: string
-    photo4: string; photo4Caption: string
-    photo5: string; photo5Caption: string
-    photo6: string; photo6Caption: string
+    photo1: string; photo1Title: string; photo1Custom: string; photo1Caption: string
+    photo2: string; photo2Title: string; photo2Custom: string; photo2Caption: string
+    photo3: string; photo3Title: string; photo3Custom: string; photo3Caption: string
+    photo4: string; photo4Title: string; photo4Custom: string; photo4Caption: string
+    photo5: string; photo5Title: string; photo5Custom: string; photo5Caption: string
+    photo6: string; photo6Title: string; photo6Custom: string; photo6Caption: string
+    customHtml: string
+    lovableUrl: string
     facebookUrl: string
     instagramUrl: string
     googleMapsUrl: string
@@ -329,7 +331,7 @@ export default function ProjectDetailPage() {
         const res = await fetch(`/api/projects/${projectId}/landing`)
         if (res.ok) {
           const data = await res.json()
-          setLandingData({ videoUrl: '', galleryTitle: '', gallerySubtitle: '', photo1: '', photo1Caption: '', photo2: '', photo2Caption: '', photo3: '', photo3Caption: '', photo4: '', photo4Caption: '', photo5: '', photo5Caption: '', photo6: '', photo6Caption: '', ...data })
+          setLandingData({ videoUrl: '', galleryTitle: '', gallerySubtitle: '', photo1: '', photo1Title: '', photo1Custom: '', photo1Caption: '', photo2: '', photo2Title: '', photo2Custom: '', photo2Caption: '', photo3: '', photo3Title: '', photo3Custom: '', photo3Caption: '', photo4: '', photo4Title: '', photo4Custom: '', photo4Caption: '', photo5: '', photo5Title: '', photo5Custom: '', photo5Caption: '', photo6: '', photo6Title: '', photo6Custom: '', photo6Caption: '', customHtml: '', lovableUrl: '', ...data })
         }
       } catch {
         // Silently fail
@@ -384,12 +386,14 @@ export default function ProjectDetailPage() {
           videoUrl: landingData.videoUrl,
           galleryTitle: landingData.galleryTitle,
           gallerySubtitle: landingData.gallerySubtitle,
-          photo1: landingData.photo1, photo1Caption: landingData.photo1Caption,
-          photo2: landingData.photo2, photo2Caption: landingData.photo2Caption,
-          photo3: landingData.photo3, photo3Caption: landingData.photo3Caption,
-          photo4: landingData.photo4, photo4Caption: landingData.photo4Caption,
-          photo5: landingData.photo5, photo5Caption: landingData.photo5Caption,
-          photo6: landingData.photo6, photo6Caption: landingData.photo6Caption,
+          photo1: landingData.photo1, photo1Title: landingData.photo1Title, photo1Custom: landingData.photo1Custom, photo1Caption: landingData.photo1Caption,
+          photo2: landingData.photo2, photo2Title: landingData.photo2Title, photo2Custom: landingData.photo2Custom, photo2Caption: landingData.photo2Caption,
+          photo3: landingData.photo3, photo3Title: landingData.photo3Title, photo3Custom: landingData.photo3Custom, photo3Caption: landingData.photo3Caption,
+          photo4: landingData.photo4, photo4Title: landingData.photo4Title, photo4Custom: landingData.photo4Custom, photo4Caption: landingData.photo4Caption,
+          photo5: landingData.photo5, photo5Title: landingData.photo5Title, photo5Custom: landingData.photo5Custom, photo5Caption: landingData.photo5Caption,
+          photo6: landingData.photo6, photo6Title: landingData.photo6Title, photo6Custom: landingData.photo6Custom, photo6Caption: landingData.photo6Caption,
+          customHtml: landingData.customHtml,
+          lovableUrl: landingData.lovableUrl,
           facebookUrl: landingData.facebookUrl,
           instagramUrl: landingData.instagramUrl,
           googleMapsUrl: landingData.googleMapsUrl,
@@ -2436,11 +2440,20 @@ export default function ProjectDetailPage() {
                       <Input value={landingData.gallerySubtitle} onChange={(e) => updateLandingField('gallerySubtitle', e.target.value)} placeholder="Una descripción breve de las fotos" />
                     </div>
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     {([1,2,3,4,5,6] as const).map(n => (
                       <div key={n} className="space-y-2 rounded-lg border border-input p-3">
                         <p className="text-xs font-medium text-muted-foreground">Foto {n}</p>
                         <div className="space-y-1">
+                          <Label className="text-xs">Título</Label>
+                          <Input
+                            value={(landingData as unknown as Record<string,string>)[`photo${n}Title`] || ''}
+                            onChange={(e) => updateLandingField(`photo${n}Title` as keyof typeof landingData, e.target.value)}
+                            placeholder="Título de la fotografía"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Fotografía (URL)</Label>
                           <Input
                             value={(landingData as unknown as Record<string,string>)[`photo${n}`] || ''}
                             onChange={(e) => updateLandingField(`photo${n}` as keyof typeof landingData, e.target.value)}
@@ -2448,6 +2461,15 @@ export default function ProjectDetailPage() {
                           />
                         </div>
                         <div className="space-y-1">
+                          <Label className="text-xs">Campo personalizado</Label>
+                          <Input
+                            value={(landingData as unknown as Record<string,string>)[`photo${n}Custom`] || ''}
+                            onChange={(e) => updateLandingField(`photo${n}Custom` as keyof typeof landingData, e.target.value)}
+                            placeholder="Subtítulo, etiqueta, texto libre..."
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Descripción</Label>
                           <Input
                             value={(landingData as unknown as Record<string,string>)[`photo${n}Caption`] || ''}
                             onChange={(e) => updateLandingField(`photo${n}Caption` as keyof typeof landingData, e.target.value)}
@@ -2457,6 +2479,46 @@ export default function ProjectDetailPage() {
                       </div>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Lovable / Custom HTML */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Template personalizado (Lovable u otro)</CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    Reemplaza el diseño visual del home con HTML propio. Las keywords, rich snippets y SEO no se ven afectados.
+                    {landingData.customHtml ? <span className="ml-1 text-green-600 font-medium">● Template activo</span> : null}
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="rounded-md bg-muted/50 border border-dashed border-muted-foreground/30 p-3 text-xs text-muted-foreground space-y-1">
+                    <p className="font-medium text-foreground">Cómo obtener el HTML de tu página Lovable:</p>
+                    <p>1. Abre la página en el navegador (ej: mariogalarza.com)</p>
+                    <p>2. Presiona <kbd className="bg-muted border rounded px-1">F12</kbd> → pestaña <strong>Console</strong></p>
+                    <p>3. Pega y ejecuta: <code className="bg-muted border rounded px-1 font-mono">copy(document.documentElement.outerHTML)</code></p>
+                    <p>4. Pega el resultado en el campo de abajo y guarda</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label>HTML completo</Label>
+                    <Textarea
+                      value={landingData.customHtml || ''}
+                      onChange={(e) => updateLandingField('customHtml', e.target.value)}
+                      rows={6}
+                      className="font-mono text-xs"
+                      placeholder="Pega aquí el HTML completo de tu página Lovable..."
+                    />
+                  </div>
+                  {landingData.customHtml && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-destructive border-destructive/40 hover:bg-destructive/10"
+                      onClick={() => updateLandingField('customHtml', '')}
+                    >
+                      Eliminar template personalizado (volver a neuro-landing)
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 

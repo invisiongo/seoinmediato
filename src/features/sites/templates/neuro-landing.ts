@@ -38,12 +38,12 @@ interface LandingDataFromDb {
   faqs?: string
   galleryTitle?: string
   gallerySubtitle?: string
-  photo1?: string; photo1Caption?: string
-  photo2?: string; photo2Caption?: string
-  photo3?: string; photo3Caption?: string
-  photo4?: string; photo4Caption?: string
-  photo5?: string; photo5Caption?: string
-  photo6?: string; photo6Caption?: string
+  photo1?: string; photo1Title?: string; photo1Custom?: string; photo1Caption?: string
+  photo2?: string; photo2Title?: string; photo2Custom?: string; photo2Caption?: string
+  photo3?: string; photo3Title?: string; photo3Custom?: string; photo3Caption?: string
+  photo4?: string; photo4Title?: string; photo4Custom?: string; photo4Caption?: string
+  photo5?: string; photo5Title?: string; photo5Custom?: string; photo5Caption?: string
+  photo6?: string; photo6Title?: string; photo6Custom?: string; photo6Caption?: string
   facebookUrl?: string
   instagramUrl?: string
   googleMapsUrl?: string
@@ -414,12 +414,12 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
   ${(() => {
     const ld = params.landingData
     const photos = [
-      { url: ld?.photo1 || '', cap: ld?.photo1Caption || '' },
-      { url: ld?.photo2 || '', cap: ld?.photo2Caption || '' },
-      { url: ld?.photo3 || '', cap: ld?.photo3Caption || '' },
-      { url: ld?.photo4 || '', cap: ld?.photo4Caption || '' },
-      { url: ld?.photo5 || '', cap: ld?.photo5Caption || '' },
-      { url: ld?.photo6 || '', cap: ld?.photo6Caption || '' },
+      { url: ld?.photo1 || '', title: ld?.photo1Title || '', custom: ld?.photo1Custom || '', cap: ld?.photo1Caption || '' },
+      { url: ld?.photo2 || '', title: ld?.photo2Title || '', custom: ld?.photo2Custom || '', cap: ld?.photo2Caption || '' },
+      { url: ld?.photo3 || '', title: ld?.photo3Title || '', custom: ld?.photo3Custom || '', cap: ld?.photo3Caption || '' },
+      { url: ld?.photo4 || '', title: ld?.photo4Title || '', custom: ld?.photo4Custom || '', cap: ld?.photo4Caption || '' },
+      { url: ld?.photo5 || '', title: ld?.photo5Title || '', custom: ld?.photo5Custom || '', cap: ld?.photo5Caption || '' },
+      { url: ld?.photo6 || '', title: ld?.photo6Title || '', custom: ld?.photo6Custom || '', cap: ld?.photo6Caption || '' },
     ].filter(p => p.url.trim())
     if (photos.length === 0) return ''
 
@@ -439,8 +439,12 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
     </div>` : ''}
     <div style="display:grid;grid-template-columns:${cols};gap:16px;${centerStyle}">
       ${photos.map(p => `<figure style="margin:0;border-radius:16px;overflow:hidden;background:${t.bgCard};border:1px solid ${t.border}">
-        <img src="${escapeHtml(p.url)}" alt="${escapeHtml(p.cap || gTitle || businessName)}" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block">
-        ${p.cap ? `<figcaption style="padding:10px 14px;font-size:13px;color:${t.textMuted};text-align:center">${escapeHtml(p.cap)}</figcaption>` : ''}
+        <img src="${escapeHtml(p.url)}" alt="${escapeHtml(p.title || p.cap || gTitle || businessName)}" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block">
+        ${(p.title || p.custom || p.cap) ? `<div style="padding:12px 14px">
+          ${p.title ? `<p style="font-size:14px;font-weight:700;color:${t.textHead};margin:0 0 4px">${escapeHtml(p.title)}</p>` : ''}
+          ${p.custom ? `<p style="font-size:12px;color:${t.accent};margin:0 0 4px;font-weight:600">${escapeHtml(p.custom)}</p>` : ''}
+          ${p.cap ? `<p style="font-size:13px;color:${t.textMuted};margin:0">${escapeHtml(p.cap)}</p>` : ''}
+        </div>` : ''}
       </figure>`).join('')}
     </div>
   </section>`

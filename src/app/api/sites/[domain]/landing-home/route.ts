@@ -66,12 +66,12 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       faqs: String(landingDoc.faqs || '[]'),
       galleryTitle: String(landingDoc.galleryTitle || ''),
       gallerySubtitle: String(landingDoc.gallerySubtitle || ''),
-      photo1: String(landingDoc.photo1 || ''), photo1Caption: String(landingDoc.photo1Caption || ''),
-      photo2: String(landingDoc.photo2 || ''), photo2Caption: String(landingDoc.photo2Caption || ''),
-      photo3: String(landingDoc.photo3 || ''), photo3Caption: String(landingDoc.photo3Caption || ''),
-      photo4: String(landingDoc.photo4 || ''), photo4Caption: String(landingDoc.photo4Caption || ''),
-      photo5: String(landingDoc.photo5 || ''), photo5Caption: String(landingDoc.photo5Caption || ''),
-      photo6: String(landingDoc.photo6 || ''), photo6Caption: String(landingDoc.photo6Caption || ''),
+      photo1: String(landingDoc.photo1 || ''), photo1Title: String(landingDoc.photo1Title || ''), photo1Custom: String(landingDoc.photo1Custom || ''), photo1Caption: String(landingDoc.photo1Caption || ''),
+      photo2: String(landingDoc.photo2 || ''), photo2Title: String(landingDoc.photo2Title || ''), photo2Custom: String(landingDoc.photo2Custom || ''), photo2Caption: String(landingDoc.photo2Caption || ''),
+      photo3: String(landingDoc.photo3 || ''), photo3Title: String(landingDoc.photo3Title || ''), photo3Custom: String(landingDoc.photo3Custom || ''), photo3Caption: String(landingDoc.photo3Caption || ''),
+      photo4: String(landingDoc.photo4 || ''), photo4Title: String(landingDoc.photo4Title || ''), photo4Custom: String(landingDoc.photo4Custom || ''), photo4Caption: String(landingDoc.photo4Caption || ''),
+      photo5: String(landingDoc.photo5 || ''), photo5Title: String(landingDoc.photo5Title || ''), photo5Custom: String(landingDoc.photo5Custom || ''), photo5Caption: String(landingDoc.photo5Caption || ''),
+      photo6: String(landingDoc.photo6 || ''), photo6Title: String(landingDoc.photo6Title || ''), photo6Custom: String(landingDoc.photo6Custom || ''), photo6Caption: String(landingDoc.photo6Caption || ''),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
@@ -127,10 +127,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     })),
   }) : null
 
-  const html = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
+  const seoTags = `<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(metaDesc)}">
@@ -144,7 +141,26 @@ ${logoUrl ? `<link rel="icon" href="${escapeHtml(logoUrl)}" type="image/png">` :
 ${logoUrl ? `<meta property="og:image" content="${escapeHtml(logoUrl)}">` : ''}
 <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
 <script type="application/ld+json">${schemaLocalBusiness}</script>
-${schemaFaq ? `<script type="application/ld+json">${schemaFaq}</script>` : ''}
+${schemaFaq ? `<script type="application/ld+json">${schemaFaq}</script>` : ''}`
+
+  // If project has a custom HTML (e.g. from Lovable), inject SEO tags and serve it
+  const customHtml = String(landingDoc?.customHtml || '')
+  if (customHtml.trim()) {
+    const injected = customHtml.replace(/<\/head>/i, `${seoTags}\n</head>`)
+    return new NextResponse(injected, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400, s-maxage=604800',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    })
+  }
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+${seoTags}
 </head>
 ${neuroHtml}
 </html>`
