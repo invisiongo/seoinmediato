@@ -6,6 +6,7 @@ import { isAppHost, getDomainFromHost, findProjectsByDomain, findProjectBySitema
 import { findKeywordBySlugCached, warmUpSlugCache, getTotalKeywordCount, getKeywordSlugsForSitemap } from '@/features/keywords/services/keywordBlockService'
 import { extractLocation } from '@/features/sites/templates/seo-content'
 import { generateNeuroLanding } from '@/features/sites/templates/neuro-landing'
+import { renderArticle } from '@/features/projects/services/seoArticleService'
 import { getPublicUrl, getPublicBase, ensureProtocol } from '@/shared/lib/seo-urls'
 
 /** Deterministic number from string — same input always returns same output */
@@ -347,13 +348,18 @@ async function handleSeoPage(
     },
   })
 
+  const articleTemplate = String(landingDoc?.seoArticleTemplate || '')
+  const renderedArticle = articleTemplate
+    ? renderArticle(articleTemplate, kw, location, businessName, niche, businessPhone)
+    : ''
+
   const bodyContent = generateNeuroLanding({
     keyword: kw,
     businessName,
     businessPhone,
     businessEmail,
     niche,
-    content: '',
+    content: renderedArticle,
     h2: '',
     location,
     mainSiteUrl,

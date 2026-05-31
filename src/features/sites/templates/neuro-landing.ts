@@ -541,6 +541,13 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
     </div>
   </section>` : ''}
 
+  ${params.content ? `<!-- ARTICLE -->
+  <section style="max-width:860px;margin:0 auto;padding:60px 20px">
+    <div style="color:${t.text};font-size:16px;line-height:1.8">
+      ${params.content}
+    </div>
+  </section>` : ''}
+
   <!-- CTA FINAL -->
   <section id="contacto" style="max-width:800px;margin:0 auto;padding:60px 20px">
     <div style="background:${t.btnSecondary};border:1px solid ${t.borderAccent};border-radius:24px;padding:48px 32px;text-align:center">
