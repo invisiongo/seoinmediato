@@ -72,12 +72,15 @@ export async function updateProject(
   id: string,
   data: Partial<ProjectFormData & { googleTokenJson: string }>
 ): Promise<Project> {
+  // Only send fields that exist in the projects collection — landing fields go to project_landing
+  const { logoUrl, differentiators, contentTone, facebookUrl, instagramUrl, googleMapsUrl, ...projectFields } = data
+  void logoUrl; void differentiators; void contentTone; void facebookUrl; void instagramUrl; void googleMapsUrl
   const doc = await getDatabases().updateDocument(
     DATABASE_ID,
     COLLECTIONS.PROJECTS,
     id,
     {
-      ...data,
+      ...projectFields,
       updatedAt: new Date().toISOString(),
     }
   )
