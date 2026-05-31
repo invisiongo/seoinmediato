@@ -2507,26 +2507,42 @@ export default function ProjectDetailPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Template personalizado (Lovable u otro)</CardTitle>
                   <p className="text-xs text-muted-foreground">
-                    Reemplaza el diseño visual del home con HTML propio. Las keywords, rich snippets y SEO no se ven afectados.
-                    {landingData.customHtml ? <span className="ml-1 text-green-600 font-medium">● Template activo</span> : null}
+                    Reemplaza el diseño visual del home. Keywords, rich snippets y SEO no se ven afectados.
+                    {(landingData.lovableUrl || landingData.customHtml) ? <span className="ml-1 text-green-600 font-medium">● Template activo</span> : null}
                   </p>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="rounded-md bg-muted/50 border border-dashed border-muted-foreground/30 p-3 text-xs text-muted-foreground space-y-1">
-                    <p className="font-medium text-foreground">Cómo obtener el HTML de tu página Lovable:</p>
-                    <p>1. Abre la página en el navegador (ej: mariogalarza.com)</p>
-                    <p>2. Presiona <kbd className="bg-muted border rounded px-1">F12</kbd> → pestaña <strong>Console</strong></p>
-                    <p>3. Pega y ejecuta: <code className="bg-muted border rounded px-1 font-mono">copy(document.documentElement.outerHTML)</code></p>
-                    <p>4. Pega el resultado en el campo de abajo y guarda</p>
+                <CardContent className="space-y-4">
+
+                  {/* Opción 1 — URL Lovable (recomendado) */}
+                  <div className="space-y-2">
+                    <Label className="font-medium">Opción 1 — URL de Lovable (recomendado)</Label>
+                    <p className="text-xs text-muted-foreground">Pega la URL de tu página Lovable. Se embebe como iframe — siempre sincronizado, sin copiar nada.</p>
+                    <Input
+                      value={landingData.lovableUrl || ''}
+                      onChange={(e) => updateLandingField('lovableUrl', e.target.value)}
+                      placeholder="https://tu-proyecto.lovable.app"
+                    />
+                    {landingData.lovableUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive border-destructive/40 hover:bg-destructive/10"
+                        onClick={() => updateLandingField('lovableUrl', '')}
+                      >
+                        Quitar URL (volver a diseño IA)
+                      </Button>
+                    )}
                   </div>
-                  <div className="space-y-1">
-                    <Label>HTML completo</Label>
+
+                  <div className="border-t pt-3 space-y-2">
+                    <Label className="font-medium text-muted-foreground">Opción 2 — HTML personalizado (avanzado)</Label>
+                    <p className="text-xs text-muted-foreground">Solo si no usas Lovable. Pega el HTML completo de cualquier página.</p>
                     <Textarea
                       value={landingData.customHtml || ''}
                       onChange={(e) => updateLandingField('customHtml', e.target.value)}
-                      rows={6}
+                      rows={4}
                       className="font-mono text-xs"
-                      placeholder="Pega aquí el HTML completo de tu página Lovable..."
+                      placeholder="Pega aquí el HTML completo..."
                     />
                   </div>
                   {landingData.customHtml && (
@@ -2536,7 +2552,7 @@ export default function ProjectDetailPage() {
                       className="text-destructive border-destructive/40 hover:bg-destructive/10"
                       onClick={() => updateLandingField('customHtml', '')}
                     >
-                      Eliminar template personalizado (volver a neuro-landing)
+                      Eliminar HTML personalizado (volver a diseño IA)
                     </Button>
                   )}
                 </CardContent>

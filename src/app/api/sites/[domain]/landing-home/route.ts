@@ -146,7 +146,30 @@ ${logoUrl ? `<meta property="og:image" content="${escapeHtml(logoUrl)}">` : ''}
 <script type="application/ld+json">${schemaLocalBusiness}</script>
 ${schemaFaq ? `<script type="application/ld+json">${schemaFaq}</script>` : ''}`
 
-  // If project has a custom HTML (e.g. from Lovable), inject SEO tags and serve it
+  // Option 1: Lovable URL → iframe embed (client just pastes the URL)
+  const lovableUrl = String(landingDoc?.lovableUrl || '').trim()
+  if (lovableUrl) {
+    const iframeHtml = `<!DOCTYPE html>
+<html lang="es">
+<head>
+${seoTags}
+<style>*{margin:0;padding:0}html,body{height:100%;overflow:hidden}iframe{width:100%;height:100vh;border:0;display:block}</style>
+</head>
+<body>
+<iframe src="${escapeHtml(lovableUrl)}" loading="lazy" title="${escapeHtml(businessName)}"></iframe>
+</body>
+</html>`
+    return new NextResponse(iframeHtml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    })
+  }
+
+  // Option 2: Custom HTML (advanced — full HTML paste)
   const customHtml = String(landingDoc?.customHtml || '')
   if (customHtml.trim()) {
     const injected = customHtml.replace(/<\/head>/i, `${seoTags}\n</head>`)
