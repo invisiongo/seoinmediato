@@ -51,13 +51,25 @@ export async function GET(
   return NextResponse.json(null, { status: 200 })
 }
 
+// Strip HTML tags from plain-text fields so pasting code by mistake never breaks the landing
+function stripHtml(val: unknown): string {
+  return String(val ?? '').replace(/<[^>]*>/g, '').trim()
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ projectId: string }> }
 ) {
   const { projectId } = await params
-  const body = await request.json()
+  const raw = await request.json()
   const db = getDb()
+
+  // Sanitize text-only fields — strip any HTML tags before saving
+  const TEXT_FIELDS = ['businessDescription', 'differentiators', 'contentTone', 'galleryTitle', 'gallerySubtitle', 'ctaWhatsappText', 'ctaCallText']
+  const body: Record<string, unknown> = { ...raw }
+  for (const field of TEXT_FIELDS) {
+    if (field in body) body[field] = stripHtml(body[field])
+  }
 
   const result = await db.listDocuments(DB, 'project_landing', [
     Query.equal('projectId', projectId),
