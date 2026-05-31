@@ -36,6 +36,14 @@ interface LandingDataFromDb {
   backgroundImageUrl: string
   videoUrl?: string
   faqs?: string
+  galleryTitle?: string
+  gallerySubtitle?: string
+  photo1?: string; photo1Caption?: string
+  photo2?: string; photo2Caption?: string
+  photo3?: string; photo3Caption?: string
+  photo4?: string; photo4Caption?: string
+  photo5?: string; photo5Caption?: string
+  photo6?: string; photo6Caption?: string
   facebookUrl?: string
   instagramUrl?: string
   googleMapsUrl?: string
@@ -402,6 +410,41 @@ ${waLink ? `<a href="${waLink}" target="_blank" rel="noopener" id="wa-float" sty
       </div>`).join('\n      ')}
     </div>
   </section>
+
+  ${(() => {
+    const ld = params.landingData
+    const photos = [
+      { url: ld?.photo1 || '', cap: ld?.photo1Caption || '' },
+      { url: ld?.photo2 || '', cap: ld?.photo2Caption || '' },
+      { url: ld?.photo3 || '', cap: ld?.photo3Caption || '' },
+      { url: ld?.photo4 || '', cap: ld?.photo4Caption || '' },
+      { url: ld?.photo5 || '', cap: ld?.photo5Caption || '' },
+      { url: ld?.photo6 || '', cap: ld?.photo6Caption || '' },
+    ].filter(p => p.url.trim())
+    if (photos.length === 0) return ''
+
+    const gTitle = ld?.galleryTitle || ''
+    const gSubtitle = ld?.gallerySubtitle || ''
+    const cols = photos.length === 1 ? '1fr'
+      : photos.length === 2 ? 'repeat(2,1fr)'
+      : photos.length <= 4 ? 'repeat(auto-fit,minmax(280px,1fr))'
+      : 'repeat(auto-fit,minmax(240px,1fr))'
+    const centerStyle = photos.length === 1 ? 'max-width:520px;margin:0 auto' : ''
+
+    return `<!-- GALLERY -->
+  <section style="max-width:1100px;margin:0 auto;padding:60px 20px">
+    ${gTitle || gSubtitle ? `<div style="text-align:center;margin-bottom:32px">
+      ${gTitle ? `<h2 style="font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:${t.textHead};margin:0 0 10px">${escapeHtml(gTitle)}</h2>` : ''}
+      ${gSubtitle ? `<p style="font-size:16px;color:${t.textMuted};max-width:640px;margin:0 auto">${escapeHtml(gSubtitle)}</p>` : ''}
+    </div>` : ''}
+    <div style="display:grid;grid-template-columns:${cols};gap:16px;${centerStyle}">
+      ${photos.map(p => `<figure style="margin:0;border-radius:16px;overflow:hidden;background:${t.bgCard};border:1px solid ${t.border}">
+        <img src="${escapeHtml(p.url)}" alt="${escapeHtml(p.cap || gTitle || businessName)}" loading="lazy" style="width:100%;height:220px;object-fit:cover;display:block">
+        ${p.cap ? `<figcaption style="padding:10px 14px;font-size:13px;color:${t.textMuted};text-align:center">${escapeHtml(p.cap)}</figcaption>` : ''}
+      </figure>`).join('')}
+    </div>
+  </section>`
+  })()}
 
   <!-- SERVICES -->
   <section id="servicios" style="max-width:1100px;margin:0 auto;padding:60px 20px">

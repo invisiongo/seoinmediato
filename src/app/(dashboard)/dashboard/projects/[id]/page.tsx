@@ -94,6 +94,14 @@ export default function ProjectDetailPage() {
     logoUrl: string
     backgroundImageUrl: string
     videoUrl: string
+    galleryTitle: string
+    gallerySubtitle: string
+    photo1: string; photo1Caption: string
+    photo2: string; photo2Caption: string
+    photo3: string; photo3Caption: string
+    photo4: string; photo4Caption: string
+    photo5: string; photo5Caption: string
+    photo6: string; photo6Caption: string
     facebookUrl: string
     instagramUrl: string
     googleMapsUrl: string
@@ -321,7 +329,7 @@ export default function ProjectDetailPage() {
         const res = await fetch(`/api/projects/${projectId}/landing`)
         if (res.ok) {
           const data = await res.json()
-          setLandingData({ videoUrl: '', ...data })
+          setLandingData({ videoUrl: '', galleryTitle: '', gallerySubtitle: '', photo1: '', photo1Caption: '', photo2: '', photo2Caption: '', photo3: '', photo3Caption: '', photo4: '', photo4Caption: '', photo5: '', photo5Caption: '', photo6: '', photo6Caption: '', ...data })
         }
       } catch {
         // Silently fail
@@ -374,6 +382,14 @@ export default function ProjectDetailPage() {
           logoUrl: landingData.logoUrl,
           backgroundImageUrl: landingData.backgroundImageUrl,
           videoUrl: landingData.videoUrl,
+          galleryTitle: landingData.galleryTitle,
+          gallerySubtitle: landingData.gallerySubtitle,
+          photo1: landingData.photo1, photo1Caption: landingData.photo1Caption,
+          photo2: landingData.photo2, photo2Caption: landingData.photo2Caption,
+          photo3: landingData.photo3, photo3Caption: landingData.photo3Caption,
+          photo4: landingData.photo4, photo4Caption: landingData.photo4Caption,
+          photo5: landingData.photo5, photo5Caption: landingData.photo5Caption,
+          photo6: landingData.photo6, photo6Caption: landingData.photo6Caption,
           facebookUrl: landingData.facebookUrl,
           instagramUrl: landingData.instagramUrl,
           googleMapsUrl: landingData.googleMapsUrl,
@@ -2399,6 +2415,47 @@ export default function ProjectDetailPage() {
                       placeholder="URL de YouTube o pega el código iframe completo"
                     />
                     <p className="text-xs text-muted-foreground">Se muestra en la landing justo después de la descripción del negocio. Acepta cualquier formato de URL de YouTube.</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Gallery */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Galería de fotografías</CardTitle>
+                  <p className="text-xs text-muted-foreground">Aparece antes de los servicios. Solo se muestran las fotos con URL. 1 foto = centrada, 2-6 = lado a lado responsive.</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1">
+                      <Label>Título de la sección (opcional)</Label>
+                      <Input value={landingData.galleryTitle} onChange={(e) => updateLandingField('galleryTitle', e.target.value)} placeholder="Ej: Nuestro trabajo, Galería, Instalaciones..." />
+                    </div>
+                    <div className="space-y-1">
+                      <Label>Subtítulo (opcional)</Label>
+                      <Input value={landingData.gallerySubtitle} onChange={(e) => updateLandingField('gallerySubtitle', e.target.value)} placeholder="Una descripción breve de las fotos" />
+                    </div>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {([1,2,3,4,5,6] as const).map(n => (
+                      <div key={n} className="space-y-2 rounded-lg border border-input p-3">
+                        <p className="text-xs font-medium text-muted-foreground">Foto {n}</p>
+                        <div className="space-y-1">
+                          <Input
+                            value={(landingData as unknown as Record<string,string>)[`photo${n}`] || ''}
+                            onChange={(e) => updateLandingField(`photo${n}` as keyof typeof landingData, e.target.value)}
+                            placeholder="https://... (URL de la imagen)"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Input
+                            value={(landingData as unknown as Record<string,string>)[`photo${n}Caption`] || ''}
+                            onChange={(e) => updateLandingField(`photo${n}Caption` as keyof typeof landingData, e.target.value)}
+                            placeholder="Descripción de la foto (opcional)"
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
