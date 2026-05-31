@@ -60,18 +60,21 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     h2: '',
     location: '',
     mainSiteUrl: ensureProtocol((parent.redirectUrl as string) || domain),
-    landingData: landingDoc ? {
+    landingData: landingDoc ? (() => {
+      let pm: Record<string, { t?: string; c?: string }> = {}
+      try { pm = JSON.parse(String(landingDoc.photosJson || '{}')) } catch { /* noop */ }
+      return {
       businessDescription: String(landingDoc.businessDescription || ''),
       videoUrl: String(landingDoc.videoUrl || ''),
       faqs: String(landingDoc.faqs || '[]'),
       galleryTitle: String(landingDoc.galleryTitle || ''),
       gallerySubtitle: String(landingDoc.gallerySubtitle || ''),
-      photo1: String(landingDoc.photo1 || ''), photo1Title: String(landingDoc.photo1Title || ''), photo1Custom: String(landingDoc.photo1Custom || ''), photo1Caption: String(landingDoc.photo1Caption || ''),
-      photo2: String(landingDoc.photo2 || ''), photo2Title: String(landingDoc.photo2Title || ''), photo2Custom: String(landingDoc.photo2Custom || ''), photo2Caption: String(landingDoc.photo2Caption || ''),
-      photo3: String(landingDoc.photo3 || ''), photo3Title: String(landingDoc.photo3Title || ''), photo3Custom: String(landingDoc.photo3Custom || ''), photo3Caption: String(landingDoc.photo3Caption || ''),
-      photo4: String(landingDoc.photo4 || ''), photo4Title: String(landingDoc.photo4Title || ''), photo4Custom: String(landingDoc.photo4Custom || ''), photo4Caption: String(landingDoc.photo4Caption || ''),
-      photo5: String(landingDoc.photo5 || ''), photo5Title: String(landingDoc.photo5Title || ''), photo5Custom: String(landingDoc.photo5Custom || ''), photo5Caption: String(landingDoc.photo5Caption || ''),
-      photo6: String(landingDoc.photo6 || ''), photo6Title: String(landingDoc.photo6Title || ''), photo6Custom: String(landingDoc.photo6Custom || ''), photo6Caption: String(landingDoc.photo6Caption || ''),
+      photo1: String(landingDoc.photo1 || ''), photo1Title: pm['1']?.t || '', photo1Custom: pm['1']?.c || '', photo1Caption: String(landingDoc.photo1Caption || ''),
+      photo2: String(landingDoc.photo2 || ''), photo2Title: pm['2']?.t || '', photo2Custom: pm['2']?.c || '', photo2Caption: String(landingDoc.photo2Caption || ''),
+      photo3: String(landingDoc.photo3 || ''), photo3Title: pm['3']?.t || '', photo3Custom: pm['3']?.c || '', photo3Caption: String(landingDoc.photo3Caption || ''),
+      photo4: String(landingDoc.photo4 || ''), photo4Title: pm['4']?.t || '', photo4Custom: pm['4']?.c || '', photo4Caption: String(landingDoc.photo4Caption || ''),
+      photo5: String(landingDoc.photo5 || ''), photo5Title: pm['5']?.t || '', photo5Custom: pm['5']?.c || '', photo5Caption: String(landingDoc.photo5Caption || ''),
+      photo6: String(landingDoc.photo6 || ''), photo6Title: pm['6']?.t || '', photo6Custom: pm['6']?.c || '', photo6Caption: String(landingDoc.photo6Caption || ''),
       services: String(landingDoc.services || '[]'),
       testimonials: String(landingDoc.testimonials || '[]'),
       stats: String(landingDoc.stats || '[]'),
@@ -84,7 +87,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       facebookUrl: String(landingDoc.facebookUrl || ''),
       instagramUrl: String(landingDoc.instagramUrl || ''),
       googleMapsUrl: String(landingDoc.googleMapsUrl || ''),
-    } : undefined,
+      }})() : undefined,
   })
 
   const logoUrl = String(landingDoc?.logoUrl || '')

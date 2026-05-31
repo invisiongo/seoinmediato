@@ -331,7 +331,19 @@ export default function ProjectDetailPage() {
         const res = await fetch(`/api/projects/${projectId}/landing`)
         if (res.ok) {
           const data = await res.json()
-          setLandingData({ videoUrl: '', galleryTitle: '', gallerySubtitle: '', photo1: '', photo1Title: '', photo1Custom: '', photo1Caption: '', photo2: '', photo2Title: '', photo2Custom: '', photo2Caption: '', photo3: '', photo3Title: '', photo3Custom: '', photo3Caption: '', photo4: '', photo4Title: '', photo4Custom: '', photo4Caption: '', photo5: '', photo5Title: '', photo5Custom: '', photo5Caption: '', photo6: '', photo6Title: '', photo6Custom: '', photo6Caption: '', customHtml: '', lovableUrl: '', ...data })
+          // Unpack photosJson into individual title/custom fields
+          let photosMeta: Record<string, { t?: string; c?: string }> = {}
+          try { photosMeta = JSON.parse(data.photosJson || '{}') } catch { /* noop */ }
+          setLandingData({
+            videoUrl: '', galleryTitle: '', gallerySubtitle: '',
+            photo1: '', photo1Title: photosMeta['1']?.t || '', photo1Custom: photosMeta['1']?.c || '', photo1Caption: '',
+            photo2: '', photo2Title: photosMeta['2']?.t || '', photo2Custom: photosMeta['2']?.c || '', photo2Caption: '',
+            photo3: '', photo3Title: photosMeta['3']?.t || '', photo3Custom: photosMeta['3']?.c || '', photo3Caption: '',
+            photo4: '', photo4Title: photosMeta['4']?.t || '', photo4Custom: photosMeta['4']?.c || '', photo4Caption: '',
+            photo5: '', photo5Title: photosMeta['5']?.t || '', photo5Custom: photosMeta['5']?.c || '', photo5Caption: '',
+            photo6: '', photo6Title: photosMeta['6']?.t || '', photo6Custom: photosMeta['6']?.c || '', photo6Caption: '',
+            customHtml: '', lovableUrl: '', ...data,
+          })
         }
       } catch {
         // Silently fail
@@ -386,12 +398,20 @@ export default function ProjectDetailPage() {
           videoUrl: landingData.videoUrl,
           galleryTitle: landingData.galleryTitle,
           gallerySubtitle: landingData.gallerySubtitle,
-          photo1: landingData.photo1, photo1Title: landingData.photo1Title, photo1Custom: landingData.photo1Custom, photo1Caption: landingData.photo1Caption,
-          photo2: landingData.photo2, photo2Title: landingData.photo2Title, photo2Custom: landingData.photo2Custom, photo2Caption: landingData.photo2Caption,
-          photo3: landingData.photo3, photo3Title: landingData.photo3Title, photo3Custom: landingData.photo3Custom, photo3Caption: landingData.photo3Caption,
-          photo4: landingData.photo4, photo4Title: landingData.photo4Title, photo4Custom: landingData.photo4Custom, photo4Caption: landingData.photo4Caption,
-          photo5: landingData.photo5, photo5Title: landingData.photo5Title, photo5Custom: landingData.photo5Custom, photo5Caption: landingData.photo5Caption,
-          photo6: landingData.photo6, photo6Title: landingData.photo6Title, photo6Custom: landingData.photo6Custom, photo6Caption: landingData.photo6Caption,
+          photo1: landingData.photo1, photo1Caption: landingData.photo1Caption,
+          photo2: landingData.photo2, photo2Caption: landingData.photo2Caption,
+          photo3: landingData.photo3, photo3Caption: landingData.photo3Caption,
+          photo4: landingData.photo4, photo4Caption: landingData.photo4Caption,
+          photo5: landingData.photo5, photo5Caption: landingData.photo5Caption,
+          photo6: landingData.photo6, photo6Caption: landingData.photo6Caption,
+          photosJson: JSON.stringify({
+            '1': { t: landingData.photo1Title, c: landingData.photo1Custom },
+            '2': { t: landingData.photo2Title, c: landingData.photo2Custom },
+            '3': { t: landingData.photo3Title, c: landingData.photo3Custom },
+            '4': { t: landingData.photo4Title, c: landingData.photo4Custom },
+            '5': { t: landingData.photo5Title, c: landingData.photo5Custom },
+            '6': { t: landingData.photo6Title, c: landingData.photo6Custom },
+          }),
           customHtml: landingData.customHtml,
           lovableUrl: landingData.lovableUrl,
           facebookUrl: landingData.facebookUrl,
