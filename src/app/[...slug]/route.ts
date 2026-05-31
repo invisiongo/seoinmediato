@@ -4,7 +4,7 @@ import { serverDatabases } from '@/shared/lib/appwrite-server'
 import { DATABASE_ID, COLLECTIONS } from '@/shared/lib/constants'
 import { isAppHost, getDomainFromHost, findProjectsByDomain, findProjectBySitemapSlug } from '@/features/sites/services/projectLookup'
 import { findKeywordBySlugCached, warmUpSlugCache, getTotalKeywordCount, getKeywordSlugsForSitemap } from '@/features/keywords/services/keywordBlockService'
-import { extractLocation } from '@/features/sites/templates/seo-content'
+import { extractLocation, generateSeoContent, generateH2Variation } from '@/features/sites/templates/seo-content'
 import { generateNeuroLanding } from '@/features/sites/templates/neuro-landing'
 import { renderArticle } from '@/features/projects/services/seoArticleService'
 import { getPublicUrl, getPublicBase, ensureProtocol } from '@/shared/lib/seo-urls'
@@ -355,14 +355,24 @@ async function handleSeoPage(
     ? renderArticle(articleTemplate, kw, location, businessName, niche, businessPhone)
     : ''
 
+  const seoContent = generateSeoContent(keyword.slug, {
+    keyword: kw,
+    businessName,
+    niche,
+    location,
+    businessDescription: String(landingDoc?.businessDescription || ''),
+    differentiators: String(landingDoc?.differentiators || ''),
+  })
+  const h2 = generateH2Variation(kw, businessName)
+
   const bodyContent = generateNeuroLanding({
     keyword: kw,
     businessName,
     businessPhone,
     businessEmail,
     niche,
-    content: renderedArticle,
-    h2: '',
+    content: renderedArticle || seoContent,
+    h2,
     location,
     mainSiteUrl,
     landingData: landingDoc ? {
