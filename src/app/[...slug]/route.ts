@@ -231,12 +231,7 @@ async function handleSeoPage(
   const dateHash = hashToRange(kw, 1, 28)
   const publishedDate = `2026-02-${String(dateHash).padStart(2, '0')}T12:00:00-06:00`
 
-  const redirectScript =
-    seoMode === 'subdomain_redirect' && redirectUrl
-      ? `<script>(function(){var b=/googlebot|bingbot|slurp|duckduckbot|yandexbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|pinterestbot|developers\\.google\\.com/i;if(!b.test(navigator.userAgent)){window.location.replace("${escapeHtml(redirectUrl)}");}})();</script>`
-      : ''
-
-  // Fetch landing doc: try region first, then fall back to parent
+  // Fetch landing doc FIRST — needed for lovableUrl redirect
   let landingDoc: Record<string, unknown> | null = null
   try {
     const landingResult = await serverDatabases.listDocuments(
@@ -259,6 +254,13 @@ async function handleSeoPage(
   } catch {
     // Continue without landing data
   }
+
+  // lovableUrl overrides redirectUrl — if set, all non-bot visitors go to Lovable
+  const effectiveRedirect = String(landingDoc?.lovableUrl || '').trim() || redirectUrl
+  const redirectScript =
+    (seoMode === 'subdomain_redirect' && effectiveRedirect) || (String(landingDoc?.lovableUrl || '').trim())
+      ? `<script>(function(){var b=/googlebot|bingbot|slurp|duckduckbot|yandexbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|pinterestbot|developers\\.google\\.com/i;if(!b.test(navigator.userAgent)){window.location.replace("${escapeHtml(effectiveRedirect)}");}})();</script>`
+      : ''
 
   const socialLinks = {
     facebook: String(landingDoc?.facebookUrl || ''),
