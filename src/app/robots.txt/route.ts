@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isAppHost, getDomainFromHost, findProjectByDomain } from '@/features/sites/services/projectLookup'
+import { ensureProtocol } from '@/shared/lib/seo-urls'
 
 export async function GET(request: NextRequest) {
   const host = request.headers.get('host') || ''
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const projectDomain = (project.domain as string).replace(/\/$/, '')
+    const projectDomain = ensureProtocol((project.domain as string).replace(/\/$/, ''))
 
     const robotsTxt = `User-agent: *
 Allow: /
