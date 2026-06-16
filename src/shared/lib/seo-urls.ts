@@ -63,11 +63,17 @@ export function projectNameToSlug(name: string): string {
 
 /**
  * Build the public sitemap index URL for a project.
- * Sitemaps live at root (no prefix) so GSC accepts them as standard sitemap URLs:
+ * If the project has a seoPathPrefix, the sitemap lives under that prefix:
+ *   https://example.com/servicios/sitemap-{name}.xml
+ * Otherwise at root:
  *   https://example.com/sitemap-{name}.xml
  */
 export function getSitemapUrl(project: ProjectLike): string {
   const domain = ensureProtocol(String(project.domain || '').replace(/\/$/, ''))
   const slug = projectNameToSlug(String(project.name || ''))
+  const prefix = String(project.seoPathPrefix || '').replace(/^\/|\/$/g, '')
+  if (prefix) {
+    return `${domain}/${prefix}/sitemap-${slug}.xml`
+  }
   return `${domain}/sitemap-${slug}.xml`
 }

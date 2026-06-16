@@ -49,9 +49,29 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   try {
     // ─── Sitemap routing ────────────────────────────────────────────
-    // Strategy: ALWAYS try index lookup first by full slug.
-    // Only if no project matches, parse trailing -N as a page number.
-    // This handles any project name (numbers, hyphens, etc.) without ambiguity.
+    // Handles both root sitemaps (sitemap-name.xml) and prefixed sitemaps
+    // (servicios/sitemap-name.xml) for projects with seoPathPrefix.
+
+    // Check prefixed sitemap first: prefix/sitemap-name.xml or prefix/sitemap-name-N.xml
+    const prefixedSitemapMatch = fullPath.match(/^([a-z0-9-]+)\/sitemap-([a-z0-9-]+)\.xml$/)
+    if (prefixedSitemapMatch) {
+      const urlPrefix = prefixedSitemapMatch[1]
+      const possibleSlug = prefixedSitemapMatch[2]
+
+      const indexProject = await findProjectBySitemapSlug(domain, possibleSlug)
+      if (indexProject) {
+        return await handleSitemapIndex(domain, possibleSlug, urlPrefix)
+      }
+
+      const pageMatch = possibleSlug.match(/^(.+)-(\d+)$/)
+      if (pageMatch) {
+        return await handleSitemapPage(domain, pageMatch[1], parseInt(pageMatch[2], 10), urlPrefix)
+      }
+
+      return new NextResponse('Sitemap no encontrado', { status: 404 })
+    }
+
+    // Root sitemap: sitemap-name.xml or sitemap-name-N.xml
     const sitemapMatch = fullPath.match(/^sitemap-([a-z0-9-]+)\.xml$/)
     if (sitemapMatch) {
       const possibleSlug = sitemapMatch[1]
@@ -84,7 +104,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-async function handleSitemapIndex(domain: string, projectSlug: string): Promise<NextResponse> {
+async function handleSitemapIndex(domain: string, projectSlug: string, urlPrefix?: string): Promise<NextResponse> {
   const project = await findProjectBySitemapSlug(domain, projectSlug)
   if (!project) {
     return new NextResponse('Proyecto no encontrado', { status: 404 })
@@ -104,13 +124,18 @@ async function handleSitemapIndex(domain: string, projectSlug: string): Promise<
   const URLS_PER_SITEMAP = 1000
   const totalSitemaps = Math.max(1, Math.ceil(totalKeywords / URLS_PER_SITEMAP))
   const domainOnly = ensureProtocol(String(project.domain || '').replace(/\/$/, ''))
+  // Use prefix from URL if provided, else fall back to project's seoPathPrefix
+  const prefix = urlPrefix || String(project.seoPathPrefix || '').replace(/^\/|\/$/g, '')
+  const subSitemapBase = prefix
+    ? `${domainOnly}/${prefix}/sitemap-${projectSlug}`
+    : `${domainOnly}/sitemap-${projectSlug}`
 
   let sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n`
   sitemapIndex += `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
 
   for (let i = 1; i <= totalSitemaps; i++) {
     sitemapIndex += `  <sitemap>\n`
-    sitemapIndex += `    <loc>${domainOnly}/sitemap-${projectSlug}-${i}.xml</loc>\n`
+    sitemapIndex += `    <loc>${subSitemapBase}-${i}.xml</loc>\n`
     sitemapIndex += `    <lastmod>2026-03-01</lastmod>\n`
     sitemapIndex += `  </sitemap>\n`
   }
@@ -123,7 +148,7 @@ async function handleSitemapIndex(domain: string, projectSlug: string): Promise<
   })
 }
 
-async function handleSitemapPage(domain: string, projectSlug: string | null, page: number): Promise<NextResponse> {
+async function handleSitemapPage(domain: string, projectSlug: string | null, page: number, _urlPrefix?: string): Promise<NextResponse> {
   if (isNaN(page) || page < 1) {
     return new NextResponse('Numero de sitemap invalido', { status: 400 })
   }
