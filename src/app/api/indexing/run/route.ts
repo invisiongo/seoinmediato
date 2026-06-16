@@ -134,7 +134,6 @@ async function processIndexingBatch(
   let totalSuccess = (currentJob.successUrls as number) || 0
   let totalFailed = (currentJob.failedUrls as number) || 0
   let errorLog = (currentJob.errorLog as string) || ''
-  let consecutive429s = 0
 
   try {
     for (const kw of toProcess) {
@@ -168,41 +167,29 @@ async function processIndexingBatch(
 
       if (result.success) {
         totalSuccess++
-        consecutive429s = 0
         await updateKeywordStatus(projectId, [kw.slug], 'indexed')
         if (activeTokenId) {
           await incrementTokenUsage(activeTokenId)
         }
       } else if (result.statusCode === 429) {
-        // Rate limited — pause THIS token, try next one
+        // Rate limited — pause THIS token only, getBestToken will pick another
         if (activeTokenId) {
           await pauseToken(activeTokenId)
         }
-        consecutive429s++
         const errEntry = `${new Date().toISOString()} | 429 RATE LIMITED | ${url} | token ${activeTokenId || 'legacy'} paused 1h`
         errorLog = errorLog ? errorLog + '\n' + errEntry : errEntry
-
-        // Don't mark keyword as failed — it will be retried
-        // If ALL tokens are 429'd (3 consecutive), stop the batch
-        if (consecutive429s >= 3) {
-          const exhaustEntry = `${new Date().toISOString()} | BATCH_PAUSED | 3 consecutive 429s, waiting for next cron cycle`
-          errorLog = errorLog + '\n' + exhaustEntry
-          break
-        }
-        // Otherwise continue — getBestToken will pick a different token next iteration
-        processed-- // Don't count this as processed, URL wasn't submitted
+        // URL not submitted — will be retried on next cycle
+        processed--
         continue
-      } else if (result.statusCode >= 400 && result.statusCode < 500 && result.statusCode !== 429) {
+      } else if (result.statusCode >= 400 && result.statusCode < 500) {
         // Client error (400, 403, 404) — permanent, don't retry
         totalFailed++
-        consecutive429s = 0
         const errEntry = `${new Date().toISOString()} | ${result.statusCode} PERMANENT | ${url} | ${result.message}`
         errorLog = errorLog ? errorLog + '\n' + errEntry : errEntry
         await updateKeywordStatus(projectId, [kw.slug], 'failed')
       } else {
         // Server error (5xx) — temporary, will retry next batch
         totalFailed++
-        consecutive429s = 0
         const errEntry = `${new Date().toISOString()} | ${result.statusCode} | ${url} | ${result.message}`
         errorLog = errorLog ? errorLog + '\n' + errEntry : errEntry
         await updateKeywordStatus(projectId, [kw.slug], 'failed')
