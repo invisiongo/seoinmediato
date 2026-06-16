@@ -1457,7 +1457,6 @@ export default function ProjectDetailPage() {
                       <thead className="bg-muted/50 border-b">
                         <tr>
                           <th className="px-4 py-2 text-left font-medium text-muted-foreground">Keyword</th>
-                          <th className="px-4 py-2 text-left font-medium text-muted-foreground">Slug</th>
                           <th className="px-4 py-2 text-left font-medium text-muted-foreground">Estado</th>
                           <th className="px-4 py-2 text-left font-medium text-muted-foreground">URL</th>
                         </tr>
@@ -1467,10 +1466,7 @@ export default function ProjectDetailPage() {
                           const seoUrl = `${publicBase}/${kw.slug}/`
                           return (
                             <tr key={kw.$id} className="border-b last:border-0 hover:bg-muted/30">
-                              <td className="px-4 py-2 max-w-[250px] truncate">{kw.keyword}</td>
-                              <td className="px-4 py-2 text-muted-foreground font-mono text-xs max-w-[200px] truncate">
-                                {kw.slug}
-                              </td>
+                              <td className="px-4 py-2 max-w-[220px] truncate font-medium">{kw.keyword}</td>
                               <td className="px-4 py-2">
                                 <Badge
                                   variant={
@@ -1484,15 +1480,16 @@ export default function ProjectDetailPage() {
                                    kw.status === 'generated' ? 'Generada' : 'Pendiente'}
                                 </Badge>
                               </td>
-                              <td className="px-4 py-2">
+                              <td className="px-4 py-2 max-w-[400px]">
                                 <a
                                   href={seoUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline truncate max-w-full"
+                                  title={seoUrl}
                                 >
-                                  Ver pagina
-                                  <ExternalLink className="h-3 w-3" />
+                                  {seoUrl}
+                                  <ExternalLink className="h-3 w-3 shrink-0" />
                                 </a>
                               </td>
                             </tr>

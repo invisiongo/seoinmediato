@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Globe, Loader2 } from 'lucide-react'
+import { Globe, Loader2, Activity } from 'lucide-react'
+import Link from 'next/link'
 import { Query } from 'appwrite'
 import { getDatabases } from '@/shared/lib/appwrite-client'
 import { DATABASE_ID, COLLECTIONS } from '@/shared/lib/constants'
@@ -88,7 +89,16 @@ export default function IndexingPage() {
   if (isLoading) {
     return (
       <div>
-        <h1 className="mb-6 text-2xl font-bold">Indexacion</h1>
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Indexacion</h1>
+          <Link
+            href="/dashboard/indexing/status"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            <Activity className="h-4 w-4" />
+            Estado en tiempo real
+          </Link>
+        </div>
         <div className="flex items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -98,7 +108,16 @@ export default function IndexingPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Indexacion</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Indexacion</h1>
+        <Link
+          href="/dashboard/indexing/status"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <Activity className="h-4 w-4" />
+          Estado en tiempo real
+        </Link>
+      </div>
 
       {rows.length === 0 ? (
         <Card>
