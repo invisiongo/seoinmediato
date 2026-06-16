@@ -30,11 +30,24 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const projects = await serverDatabases.listDocuments(
+    let projectOffset = 0
+    let allProjectDocs = (await serverDatabases.listDocuments(
       DATABASE_ID,
       COLLECTIONS.PROJECTS,
-      [Query.limit(100)]
-    )
+      [Query.limit(100), Query.offset(0)]
+    )).documents
+    while (allProjectDocs.length % 100 === 0 && allProjectDocs.length > 0) {
+      projectOffset += 100
+      const page = await serverDatabases.listDocuments(
+        DATABASE_ID,
+        COLLECTIONS.PROJECTS,
+        [Query.limit(100), Query.offset(projectOffset)]
+      )
+      if (page.documents.length === 0) break
+      allProjectDocs = [...allProjectDocs, ...page.documents]
+      if (page.documents.length < 100) break
+    }
+    const projects = { documents: allProjectDocs }
 
     // Unstick dead jobs — a live job updates $updatedAt every 10-15s
     const stuckJobs = await serverDatabases.listDocuments(
@@ -144,6 +157,8 @@ async function processProjectGroup(
     const domain = (project.domain as string).replace(/\/$/, '')
     const seoPathPrefix = (project.seoPathPrefix as string) || ''
     const indexingOrder = (project.indexingOrder as string) || 'sequential'
+    // Use project.totalKeywords as stable denominator — avoids inflation from accumulated failedUrls
+    const projectTotalKeywords = (project.totalKeywords as number) || keywords.length
 
     const runningJobs = await serverDatabases.listDocuments(
       DATABASE_ID,
@@ -174,7 +189,7 @@ async function processProjectGroup(
 
       await serverDatabases.updateDocument(DATABASE_ID, COLLECTIONS.INDEXING_JOBS, jobId, {
         status: 'running',
-        totalUrls: keywords.length + totalSuccess + totalFailed,
+        totalUrls: projectTotalKeywords,
         startedAt: new Date().toISOString(),
       })
     } else {
@@ -185,7 +200,7 @@ async function processProjectGroup(
         {
           projectId,
           status: 'running',
-          totalUrls: keywords.length,
+          totalUrls: projectTotalKeywords,
           processedUrls: 0,
           successUrls: 0,
           failedUrls: 0,

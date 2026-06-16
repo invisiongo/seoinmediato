@@ -452,7 +452,7 @@ export default function IndexingStatusPage() {
         variant="running"
         title="Indexacion en curso"
         icon={TrendingUp}
-        emptyMessage="No hay indexacion activa en este momento. El cron arranca cada 3 horas."
+        emptyMessage="No hay indexacion activa en este momento. El cron arranca cada 24 horas."
         headerColorClass="text-blue-500"
       />
 
@@ -468,7 +468,7 @@ export default function IndexingStatusPage() {
 
       {/* Footer note */}
       <p className="pb-2 text-center text-xs text-muted-foreground">
-        El cron de indexacion se ejecuta cada 3 horas automaticamente.
+        El cron de indexacion se ejecuta cada 24 horas automaticamente.
         Esta pagina se actualiza cada 30 segundos.
       </p>
     </div>
