@@ -15,7 +15,8 @@ type ProjectLike = Record<string, any>
  * Ensure a domain always starts with https://.
  */
 export function ensureProtocol(domain: string): string {
-  if (domain.startsWith('https://') || domain.startsWith('http://')) return domain
+  if (domain.startsWith('https://')) return domain
+  if (domain.startsWith('http://')) return domain.replace('http://', 'https://')
   return `https://${domain}`
 }
 

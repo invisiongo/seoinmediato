@@ -156,19 +156,30 @@ const slugCacheByProject = new Map<string, SlugCacheEntry>()
 const buildingPromises = new Map<string, Promise<Map<string, KeywordEntry>>>()
 
 /**
- * Fetch block IDs only (lightweight: no keywords payload).
+ * Fetch block IDs only (lightweight: no keywords payload). Paginates until all fetched.
  */
 async function getBlockIds(projectId: string): Promise<string[]> {
-  const response = await serverDatabases.listDocuments(
-    DATABASE_ID,
-    COLLECTIONS.KEYWORD_BLOCKS,
-    [
-      Query.equal('projectId', projectId),
-      Query.limit(100),
-      Query.select(['$id']),
-    ]
-  )
-  return response.documents.map(d => d.$id)
+  const ids: string[] = []
+  let offset = 0
+
+  while (true) {
+    const response = await serverDatabases.listDocuments(
+      DATABASE_ID,
+      COLLECTIONS.KEYWORD_BLOCKS,
+      [
+        Query.equal('projectId', projectId),
+        Query.orderAsc('blockIndex'),
+        Query.limit(100),
+        Query.offset(offset),
+        Query.select(['$id']),
+      ]
+    )
+    ids.push(...response.documents.map(d => d.$id as string))
+    if (response.documents.length < 100) break
+    offset += 100
+  }
+
+  return ids
 }
 
 /**
@@ -398,20 +409,29 @@ export async function countKeywordsByStatus(
 }
 
 /**
- * Get total keyword count for a project from blocks (only fetches count field).
+ * Get total keyword count for a project from blocks (only fetches count field). Paginates.
  */
 export async function getTotalKeywordCount(projectId: string): Promise<number> {
-  const response = await serverDatabases.listDocuments(
-    DATABASE_ID,
-    COLLECTIONS.KEYWORD_BLOCKS,
-    [
-      Query.equal('projectId', projectId),
-      Query.limit(100),
-      Query.select(['count']),
-    ]
-  )
+  let total = 0
+  let offset = 0
 
-  return response.documents.reduce((sum, doc) => sum + ((doc.count as number) || 0), 0)
+  while (true) {
+    const response = await serverDatabases.listDocuments(
+      DATABASE_ID,
+      COLLECTIONS.KEYWORD_BLOCKS,
+      [
+        Query.equal('projectId', projectId),
+        Query.limit(100),
+        Query.offset(offset),
+        Query.select(['count']),
+      ]
+    )
+    total += response.documents.reduce((sum, doc) => sum + ((doc.count as number) || 0), 0)
+    if (response.documents.length < 100) break
+    offset += 100
+  }
+
+  return total
 }
 
 /**

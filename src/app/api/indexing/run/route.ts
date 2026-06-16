@@ -125,10 +125,11 @@ async function processIndexingBatch(
 ) {
   let processed = 0
 
-  // Get current job state for lastPosition
+  // `keywords` is already filtered to pending/failed only — always start from 0.
+  // Using a position cursor into this list is wrong: as keywords get indexed they
+  // are removed from the list, so the cursor would permanently skip the first N items.
   const currentJob = await serverDatabases.getDocument(DATABASE_ID, COLLECTIONS.INDEXING_JOBS, jobId)
-  const startPos = (currentJob.lastPosition as number) || 0
-  const toProcess = keywords.slice(startPos, startPos + batchSize)
+  const toProcess = keywords.slice(0, batchSize)
 
   // Running accumulators — these only go up, never reset
   let totalSuccess = (currentJob.successUrls as number) || 0
@@ -197,10 +198,10 @@ async function processIndexingBatch(
 
       // Update job progress every request
       await serverDatabases.updateDocument(DATABASE_ID, COLLECTIONS.INDEXING_JOBS, jobId, {
-        processedUrls: startPos + processed,
+        processedUrls: totalSuccess + totalFailed,
         successUrls: totalSuccess,
         failedUrls: totalFailed,
-        lastPosition: startPos + processed,
+        lastPosition: 0,
         errorLog: errorLog.slice(0, 10000),
       })
 
@@ -210,8 +211,8 @@ async function processIndexingBatch(
       }
     }
 
-    // Determine final status
-    const remaining = keywords.length - (startPos + processed)
+    // Determine final status: compare total pending against how many we just processed
+    const remaining = keywords.length - toProcess.length
     const finalStatus = remaining <= 0 ? 'completed' : 'paused_batch'
 
     const updateData: Record<string, unknown> = { status: finalStatus }

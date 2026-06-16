@@ -282,10 +282,11 @@ async function handleSeoPage(
 
   // lovableUrl overrides redirectUrl — if set, all non-bot visitors go to Lovable
   const effectiveRedirect = String(landingDoc?.lovableUrl || '').trim() || redirectUrl
-  const redirectScript =
-    (seoMode === 'subdomain_redirect' && effectiveRedirect) || (String(landingDoc?.lovableUrl || '').trim())
-      ? `<script>(function(){var b=/googlebot|bingbot|slurp|duckduckbot|yandexbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|pinterestbot|developers\\.google\\.com/i;if(!b.test(navigator.userAgent)){window.location.replace("${escapeHtml(effectiveRedirect)}");}})();</script>`
-      : ''
+  const lovableUrl = String(landingDoc?.lovableUrl || '').trim()
+  const shouldRedirect = lovableUrl || (seoMode === 'subdomain_redirect' && effectiveRedirect)
+  const redirectScript = shouldRedirect
+    ? `<script>(function(){var b=/googlebot|bingbot|slurp|duckduckbot|yandexbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|pinterestbot|developers\\.google\\.com/i;if(!b.test(navigator.userAgent)){window.location.replace("${escapeHtml(effectiveRedirect)}");}})();</script>`
+    : ''
 
   const socialLinks = {
     facebook: String(landingDoc?.facebookUrl || ''),

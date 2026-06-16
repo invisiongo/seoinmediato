@@ -26,12 +26,21 @@ async function getProjectsCached(): Promise<Record<string, unknown>[]> {
     return projectCache
   }
 
-  const allProjects = await serverDatabases.listDocuments(
-    DATABASE_ID,
-    COLLECTIONS.PROJECTS,
-    [Query.limit(100)]
-  )
-  projectCache = allProjects.documents as Record<string, unknown>[]
+  const allDocs: Record<string, unknown>[] = []
+  let offset = 0
+
+  while (true) {
+    const page = await serverDatabases.listDocuments(
+      DATABASE_ID,
+      COLLECTIONS.PROJECTS,
+      [Query.limit(100), Query.offset(offset)]
+    )
+    allDocs.push(...(page.documents as Record<string, unknown>[]))
+    if (page.documents.length < 100) break
+    offset += 100
+  }
+
+  projectCache = allDocs
   projectCacheTime = now
   return projectCache
 }
